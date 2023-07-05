@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Options List</title>
+</head>
+<body>
+
+<table>
+  <tr>
+    <th>Strike</th>
+    <th>Price</th>
+    <th></th>
+    <th></th>
+  </tr>
+
+  <tr th:each="item: ${options}">
+    <td th:text="${item.strike}" />
+    <td th:text="${item.price}" />
+    <td> <a th:href="@{'/edit-form/' + ${item.id}}" /> Edit </td>
+    <td> <a th:href="@{'/delete/' + ${item.id}}" /> Delete </td>
+  </tr>
+</table>
+<a href="/create-form">Add option</a>
+
+</body>
+</html>

@@ -1,13 +1,14 @@
 package options.papertrading.models;
 
 import au.com.bytecode.opencsv.CSVReader;
+import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+@Component
 public class OptionCreater {
     private final char csvSplitBy = ',';
     private final String pathSPY = "src/main/resources/static/spy.csv";
@@ -23,7 +24,7 @@ public class OptionCreater {
         List<Option> list = new ArrayList<>();
         try {
             while ((stringFromCSV = csvReader.readNext()) != null) {
-                list.add(new Option(stringFromCSV[8]));
+                list.add(new Option(stringFromCSV[2],stringFromCSV[1]));
             }
         }
         catch (IOException exception) { System.out.println("File is empty"); }

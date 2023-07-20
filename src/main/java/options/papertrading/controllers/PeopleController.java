@@ -1,23 +1,26 @@
 package options.papertrading.controllers;
 
+import jakarta.validation.Valid;
 import options.papertrading.dao.PersonDao;
 import options.papertrading.models.users.Person;
+import options.papertrading.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+
 
 @Controller
 @RequestMapping("/people")
 public class PeopleController {
-
     private final PersonDao personDAO;
+    private final PersonValidator personValidator;
 
     @Autowired
-    public PeopleController(PersonDao personDAO) {
+    public PeopleController(PersonDao personDAO, PersonValidator personValidator) {
         this.personDAO = personDAO;
+        this.personValidator = personValidator;
     }
 
     @GetMapping()
@@ -40,6 +43,7 @@ public class PeopleController {
     @PostMapping()
     public String create(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult) {
+        personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors())
             return "people/new";
 
@@ -56,6 +60,7 @@ public class PeopleController {
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
                          @PathVariable("id") int id) {
+        personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors())
             return "people/edit";
 

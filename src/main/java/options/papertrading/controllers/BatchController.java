@@ -21,15 +21,15 @@ public class BatchController {
         return "batch/index";
     }
 
-    @GetMapping("/without")
-    public String withoutBatch() {
-        personDao.testMultipleUpdate();
-        return "redirect:/people";
-    }
-
-    @GetMapping("/with")
-    public String withBatch() {
-        personDao.testBatchUpdate();
-        return "redirect:/people";
-    }
+//    @GetMapping("/without")
+//    public String withoutBatch() {
+//        personDao.testMultipleUpdate();
+//        return "redirect:/people";
+//    }
+//
+//    @GetMapping("/with")
+//    public String withBatch() {
+//        personDao.testBatchUpdate();
+//        return "redirect:/people";
+//    }
 }

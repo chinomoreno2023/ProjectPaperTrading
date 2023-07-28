@@ -31,7 +31,7 @@
     <td th:text="${portfolio.volatilityWhenWasTrade + ' / ' + portfolio.volatility}"></td>
     <td th:text="${portfolio.daysToMaturity}"></td>
     <td th:text="${portfolio.collateralWhenWasTrade}"></td>
-    <td> <a href="/options/buy"> Add </a> </td>
+    <td> <a th:href="@{portfolio/delete/{id}(id=${portfolio.id})}"/> Delete</td>
   </tr>
 </table>
 <br>

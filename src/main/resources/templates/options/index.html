@@ -30,8 +30,8 @@
         <td th:text="${option.daysToMaturity}"></td>
         <td th:text="${option.buyCollateral}"></td>
         <td th:text="${option.writeCollateral}"></td>
-        <td> <a href="/options/buy"> Buy </a> </td>
-        <td> <a href="/options/write"> Write </a> </td>
+        <td> <a th:href="@{options/buy/{id}(id=${option.optionId})}"/> Buy</td>
+        <td> <a th:href="@{options/write/{id}(id=${option.optionId})}"/> Write</td>
     </tr>
 </table>
 

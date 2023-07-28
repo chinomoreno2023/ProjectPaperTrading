@@ -1,20 +1,65 @@
 package options.papertrading.models.portfolio;
 
+import jakarta.persistence.*;
+import options.papertrading.models.option.Option;
+import options.papertrading.models.users.Person;
+import org.hibernate.annotations.Cascade;
+
+@Entity
+@Table(name = "portfolios")
 public class Portfolio {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String optionId;
+
+    @Column(name = "volume")
     private int volume;
-    private int strike;
-    private String type;
-    private double price;
-    private double volatility;
-    private int daysToMaturity;
+
+    @Column(name = "trade_price")
     private double tradePrice;
+
+    @Column(name = "volatility_when_was_trade")
     private double volatilityWhenWasTrade;
+
+    @Column(name = "variat_margin")
     private double variatMargin;
+
+    @Column(name = "collateral_when_was_trade")
     private double collateralWhenWasTrade;
-    private double currentNetPosition = 260000.0;
-    private double openLimit = 1000000.0;
+
+    @Cascade(org.hibernate.annotations.CascadeType.REFRESH)
+    @OneToOne
+    @JoinColumn(name = "option_id", referencedColumnName = "id")
+    private Option option;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person owner;
+
+    public Portfolio() { }
+
+    public Portfolio(Option option, int volume, double tradePrice, double volatilityWhenWasTrade,
+                     double variatMargin, double collateralWhenWasTrade) {
+        this.volume = volume;
+        this.tradePrice = tradePrice;
+        this.volatilityWhenWasTrade = volatilityWhenWasTrade;
+        this.variatMargin = variatMargin;
+        this.collateralWhenWasTrade = collateralWhenWasTrade;
+        this.option = option;
+    }
+
+    public Portfolio(Person owner, Option option, int volume, double tradePrice, double volatilityWhenWasTrade,
+                     double variatMargin, double collateralWhenWasTrade) {
+        this.volume = volume;
+        this.tradePrice = tradePrice;
+        this.volatilityWhenWasTrade = volatilityWhenWasTrade;
+        this.variatMargin = variatMargin;
+        this.collateralWhenWasTrade = collateralWhenWasTrade;
+        this.option = option;
+        this.owner = owner;
+    }
 
     public int getId() {
         return id;
@@ -24,60 +69,12 @@ public class Portfolio {
         this.id = id;
     }
 
-    public String getOptionId() {
-        return optionId;
-    }
-
-    public void setOptionId(String optionId) {
-        this.optionId = optionId;
-    }
-
     public int getVolume() {
         return volume;
     }
 
     public void setVolume(int volume) {
         this.volume = volume;
-    }
-
-    public int getStrike() {
-        return strike;
-    }
-
-    public void setStrike(int strike) {
-        this.strike = strike;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public double getVolatility() {
-        return volatility;
-    }
-
-    public void setVolatility(double volatility) {
-        this.volatility = volatility;
-    }
-
-    public int getDaysToMaturity() {
-        return daysToMaturity;
-    }
-
-    public void setDaysToMaturity(int daysToMaturity) {
-        this.daysToMaturity = daysToMaturity;
     }
 
     public double getTradePrice() {
@@ -112,19 +109,32 @@ public class Portfolio {
         this.collateralWhenWasTrade = collateralWhenWasTrade;
     }
 
-    public double getCurrentNetPosition() {
-        return currentNetPosition;
+    public Option getOption() {
+        return option;
     }
 
-    public void setCurrentNetPosition(double currentNetPosition) {
-        this.currentNetPosition = currentNetPosition;
+    public void setOption(Option option) {
+        this.option = option;
     }
 
-    public double getOpenLimit() {
-        return openLimit;
+    public Person getOwner() {
+        return owner;
     }
 
-    public void setOpenLimit(double openLimit) {
-        this.openLimit = openLimit;
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
+
+    @Override
+    public String toString() {
+        return "Portfolio{" +
+                "id=" + id +
+                ", volume=" + volume +
+                ", tradePrice=" + tradePrice +
+                ", volatilityWhenWasTrade=" + volatilityWhenWasTrade +
+                ", variatMargin=" + variatMargin +
+                ", collateralWhenWasTrade=" + collateralWhenWasTrade +
+                ", option=" + option +
+                '}' + getOwner().getName();
     }
 }

@@ -1,6 +1,7 @@
 package options.papertrading.dao;
 
-import options.papertrading.models.options.Option;
+import options.papertrading.models.option.Option;
+import options.papertrading.models.portfolio.Portfolio;
 import options.papertrading.models.users.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -23,6 +24,19 @@ public class OptionDao {
         return jdbcTemplate.query("SELECT * FROM options", new BeanPropertyRowMapper<>(Option.class));
     }
 
+    public void addOption(Portfolio portfolio) {
+        jdbcTemplate.update("INSERT INTO portfolios(option_id, volume, trade_price, " +
+                                 "volatility_when_was_trade, variat_margin, collateral_when_was_trade)" +
+                                 " VALUES(?, ?, ?, ?, ?, ?)",
+                                 portfolio.getId(), portfolio.getVolume(),
+                                 portfolio.getTradePrice(), portfolio.getVolatilityWhenWasTrade(),
+                                 portfolio.getVariatMargin(), portfolio.getCollateralWhenWasTrade());
+    }
+
+    public Option findOptionById(String optionId) {
+        return jdbcTemplate.query("SELECT * FROM options WHERE option_id = ?", new Object[]{optionId},
+                new BeanPropertyRowMapper<>(Option.class)).stream().findAny().orElse(null);
+    }
 
 
 
@@ -65,15 +79,15 @@ public class OptionDao {
                 new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
     }
 
-    public void save(Person person) {
-        jdbcTemplate.update("INSERT INTO person(name, age, email, address) VALUES(?, ?, ?, ?)",
-                person.getName(), person.getAge(), person.getEmail(), person.getAddress());
-    }
-
-    public void update(int id, Person updatedPerson) {
-        jdbcTemplate.update("UPDATE person SET name=?, age=?, email=?, address=? WHERE id=?",
-                updatedPerson.getName(), updatedPerson.getAge(), updatedPerson.getEmail(), updatedPerson.getAddress(), id);
-    }
+//    public void save(Person person) {
+//        jdbcTemplate.update("INSERT INTO person(name, age, email, address) VALUES(?, ?, ?, ?)",
+//                person.getName(), person.getAge(), person.getEmail(), person.getAddress());
+//    }
+//
+//    public void update(int id, Person updatedPerson) {
+//        jdbcTemplate.update("UPDATE person SET name=?, age=?, email=?, address=? WHERE id=?",
+//                updatedPerson.getName(), updatedPerson.getAge(), updatedPerson.getEmail(), updatedPerson.getAddress(), id);
+//    }
 
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM person WHERE id=?", id);

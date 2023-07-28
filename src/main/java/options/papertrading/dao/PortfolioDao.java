@@ -20,8 +20,17 @@ public class PortfolioDao {
     }
 
     public List<Portfolio> index() {
-        return jdbcTemplate.query("SELECT * FROM options JOIN portfolios ON options.option_id = portfolios.option_id",
-                                        new BeanPropertyRowMapper<>(Portfolio.class));
+        return jdbcTemplate.query("SELECT * FROM options JOIN portfolios ON options.id = portfolios.id",
+                new BeanPropertyRowMapper<>(Portfolio.class));
+    }
+
+    public Portfolio findPortfolioById(int id) {
+        return jdbcTemplate.query("SELECT * FROM portfolios WHERE id = ?", new Object[]{id},
+                new BeanPropertyRowMapper<>(Portfolio.class)).stream().findAny().orElse(null);
+    }
+
+    public void deletePortfolio(int id) {
+        jdbcTemplate.update("DELETE FROM portfolios WHERE id=?", id);
     }
 
 
@@ -50,15 +59,15 @@ public class PortfolioDao {
                 new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
     }
 
-    public void save(Person person) {
-        jdbcTemplate.update("INSERT INTO person(name, age, email, address) VALUES(?, ?, ?, ?)",
-                person.getName(), person.getAge(), person.getEmail(), person.getAddress());
-    }
-
-    public void update(int id, Person updatedPerson) {
-        jdbcTemplate.update("UPDATE person SET name=?, age=?, email=?, address=? WHERE id=?",
-                updatedPerson.getName(), updatedPerson.getAge(), updatedPerson.getEmail(), updatedPerson.getAddress(), id);
-    }
+//    public void save(Person person) {
+//        jdbcTemplate.update("INSERT INTO person(name, age, email, address) VALUES(?, ?, ?, ?)",
+//                person.getName(), person.getAge(), person.getEmail(), person.getAddress());
+//    }
+//
+//    public void update(int id, Person updatedPerson) {
+//        jdbcTemplate.update("UPDATE person SET name=?, age=?, email=?, address=? WHERE id=?",
+//                updatedPerson.getName(), updatedPerson.getAge(), updatedPerson.getEmail(), updatedPerson.getAddress(), id);
+//    }
 
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM person WHERE id=?", id);

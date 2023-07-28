@@ -1,107 +1,72 @@
 package options.papertrading.dao;
 
 import options.papertrading.models.users.Person;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.sql.*;
-import java.util.ArrayList;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 @Component
 public class PersonDao {
-    private final JdbcTemplate jdbcTemplate;
+    private final SessionFactory sessionFactory;
 
     @Autowired
-    public PersonDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public PersonDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
+    @Transactional(readOnly = true)
     public List<Person> index() {
-        return jdbcTemplate.query("SELECT * FROM person", new BeanPropertyRowMapper<>(Person.class));
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("select p from Person p", Person.class).getResultList();
     }
 
+    @Transactional(readOnly = true)
     public Person show(int id) {
-        return jdbcTemplate.query("SELECT * FROM person WHERE id = ?", new Object[]{id},
-                new BeanPropertyRowMapper<>(Person.class)).stream().findAny().orElse(null);
+        Session session = sessionFactory.getCurrentSession();
+        return session.get(Person.class, id);
     }
 
-    public Optional<Person> show(String email) {
-        return jdbcTemplate.query("SELECT * FROM person WHERE email = ?", new Object[]{email},
-                new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
+    @Transactional
+    public Optional<Person> showEmail(String email) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("FROM Person WHERE email = :email", Person.class)
+                                    .setParameter("email", email)
+                                    .stream()
+                                    .filter(x -> x.getEmail().equals(email))
+                                    .findAny();
     }
 
+    @Transactional
     public Optional<Person> showName(String name) {
-        return jdbcTemplate.query("SELECT * FROM person WHERE name = ?", new Object[]{name},
-                new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("FROM Person WHERE name = :name", Person.class)
+                .setParameter("name", name)
+                .stream()
+                .filter(x -> x.getName().equals(name))
+                .findAny();
     }
 
+    @Transactional
     public void save(Person person) {
-        jdbcTemplate.update("INSERT INTO person(name, age, email, address) VALUES(?, ?, ?, ?)",
-                person.getName(), person.getAge(), person.getEmail(), person.getAddress());
+        Session session = sessionFactory.getCurrentSession();
+        session.save(person);
     }
 
+    @Transactional
     public void update(int id, Person updatedPerson) {
-        jdbcTemplate.update("UPDATE person SET name=?, age=?, email=?, address=? WHERE id=?",
-                updatedPerson.getName(), updatedPerson.getAge(), updatedPerson.getEmail(), updatedPerson.getAddress(), id);
+        Session session = sessionFactory.getCurrentSession();
+        Person personToBeUpdated = session.get(Person.class, id);
+        personToBeUpdated.setName(updatedPerson.getName());
+        personToBeUpdated.setEmail(updatedPerson.getEmail());
     }
 
+    @Transactional
     public void delete(int id) {
-        jdbcTemplate.update("DELETE FROM person WHERE id=?", id);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void testMultipleUpdate() {
-        List<Person> people = create1000People();
-        long before = System.currentTimeMillis();
-        people.forEach(person -> jdbcTemplate.update("INSERT INTO person VALUES(?, ?, ?, ?)",
-                person.getId(), person.getName(), person.getAge(), person.getEmail()));
-        long after = System.currentTimeMillis();
-        System.out.println("Time: " + (after - before));
-    }
-
-    private List<Person> create1000People() {
-        List<Person> people = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
-            people.add(new Person(i, "Name" + i, 30, "name@gmail.ru", "Mira street 15"));
-        }
-        return people;
-    }
-
-    public void testBatchUpdate() {
-        List<Person> people = create1000People();
-        long before = System.currentTimeMillis();
-        jdbcTemplate.batchUpdate("INSERT INTO person VALUES(?, ?, ?, ?)", new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setInt(1, people.get(i).getId());
-                ps.setString(2, people.get(i).getName());
-                ps.setInt(3, people.get(i).getAge());
-                ps.setString(4, people.get(i).getEmail());
-            }
-
-            @Override
-            public int getBatchSize() {
-                return people.size();
-            }
-        });
-        long after = System.currentTimeMillis();
-        System.out.println("Time: " + (after - before));
+        Session session = sessionFactory.getCurrentSession();
+        session.remove(session.get(Person.class, id));
     }
 }

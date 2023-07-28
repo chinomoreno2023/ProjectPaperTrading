@@ -62,24 +62,72 @@ package options.papertrading.controllers;
 //    }
 //}
 
+import jakarta.validation.Valid;
 import options.papertrading.dao.OptionDao;
+import options.papertrading.dao.PortfolioDao;
+import options.papertrading.models.portfolio.Portfolio;
+import options.papertrading.util.VolumeValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/options")
 public class OptionsController {
     private final OptionDao optionDao;
+    private final PortfolioDao portfolioDao;
+    private final VolumeValidator volumeValidator;
 
-    public OptionsController(OptionDao optionDao) {
+    @Autowired
+    public OptionsController(OptionDao optionDao, PortfolioDao portfolioDao, VolumeValidator volumeValidator) {
         this.optionDao = optionDao;
+        this.portfolioDao = portfolioDao;
+        this.volumeValidator = volumeValidator;
     }
 
-    @GetMapping("/1")
+    @GetMapping()
     public String index(Model model) {
         model.addAttribute("options", optionDao.index());
         return "options/index";
     }
+/**
+ * Нужно будет загружать по portfolios.id список опционов конкретного юзера.
+ * То есть нужно передавать еще и portfolios.id
+ */
+    @GetMapping("/buy/{optionId}")
+    public String buyOption(Model model, @PathVariable("optionId") String optionId) {
+        model.addAttribute("option", optionDao.findOptionById(optionId));
+        model.addAttribute("portfolio", new Portfolio());
+        return "options/buy";
+    }
+
+    @GetMapping("/write/{optionId}")
+    public String writeOption(Model model, @PathVariable("optionId") String optionId) {
+        model.addAttribute("option", optionDao.findOptionById(optionId));
+        model.addAttribute("portfolio", new Portfolio());
+        return "options/write";
+    }
+
+//    @PostMapping("/added-buy")
+//    public String buyOption(@ModelAttribute("portfolio") @Valid Portfolio portfolio, BindingResult bindingResult) {
+//        String id = portfolio.getOptionId();
+//        volumeValidator.validate(portfolio, bindingResult);
+//        if (bindingResult.hasErrors())
+//            return "redirect:/options/buy/" + id;
+//        optionDao.addOption(portfolio);
+//        return "redirect:/portfolio";
+//    }
+
+//    @PostMapping("/added-write")
+//    public String writeOption(@ModelAttribute("portfolio") @Valid Portfolio portfolio, BindingResult bindingResult) {
+//        String id = portfolio.getOptionId();
+//        volumeValidator.validate(portfolio, bindingResult);
+//        if (bindingResult.hasErrors())
+//            return "redirect:/options/write/" + id;
+//        portfolio.setVolume(portfolio.getVolume()*-1);
+//        optionDao.addOption(portfolio);
+//        return "redirect:/portfolio";
+//    }
 }

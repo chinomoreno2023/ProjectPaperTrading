@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Write option</title>
+</head>
+<body>
+
+<p th:text="${'Strike: ' + option.strike}">VALUE</p>
+<p th:text="${'Type: ' + option.type}">VALUE</p>
+
+<form th:method="post" th:action="@{/options/added-write}" th:object="${portfolio}">
+  <input type="hidden" name="tradePrice" placeholder="tradePrice" th:value="${option.price}"/>
+  <input type="hidden" name="option" placeholder="option" th:value="${option.id}"/>
+  <input type="hidden" name="owner" placeholder="owner" th:value="${person.id}"/>
+  <input type="hidden" name="volatilityWhenWasTrade" placeholder="volatilityWhenWasTrade" th:value="30000"/>
+  <input type="hidden" name="variatMargin" placeholder="variatMargin" th:value="31000"/>
+  <input type="hidden" name="collateralWhenWasTrade" placeholder="collateralWhenWasTrade" th:value="32000"/>
+
+  <label for="volume">Enter volume</label>
+  <input type="number" th:field="*{volume}" id="volume" name="volume"/>
+  <div style="color:red" th:if="${#fields.hasErrors('volume')}" th:errors="*{volume}"> </div>
+
+  <input type="submit" value="Write"/>
+</form>
+
+</body>
+</html>

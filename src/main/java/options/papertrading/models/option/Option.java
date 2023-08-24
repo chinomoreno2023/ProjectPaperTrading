@@ -1,9 +1,14 @@
 package options.papertrading.models.option;
 
-import jakarta.persistence.*;
+import lombok.*;
 import options.papertrading.models.portfolio.Portfolio;
+import org.springframework.context.annotation.Scope;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
+@Data
 @Table(name = "options")
 public class Option {
 
@@ -35,107 +40,6 @@ public class Option {
     @Column(name = "step_price")
     private double stepPrice;
 
-    @OneToOne(mappedBy = "option")
-    private Portfolio portfolio;
-
-    public Option() { }
-
-    public Option(String id, int strike, String type, double price, double volatility, int daysToMaturity, double buyCollateral,
-                  double writeCollateral, double stepPrice) {
-        this.id = id;
-        this.strike = strike;
-        this.type = type;
-        this.price = price;
-        this.volatility = volatility;
-        this.daysToMaturity = daysToMaturity;
-        this.buyCollateral = buyCollateral;
-        this.writeCollateral = writeCollateral;
-        this.stepPrice = stepPrice;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public int getStrike() {
-        return strike;
-    }
-
-    public void setStrike(int strike) {
-        this.strike = strike;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public double getVolatility() {
-        return volatility;
-    }
-
-    public void setVolatility(double volatility) {
-        this.volatility = volatility;
-    }
-
-    public int getDaysToMaturity() {
-        return daysToMaturity;
-    }
-
-    public void setDaysToMaturity(int daysToMaturity) {
-        this.daysToMaturity = daysToMaturity;
-    }
-
-    public double getBuyCollateral() {
-        return buyCollateral;
-    }
-
-    public void setBuyCollateral(double buyCollateral) {
-        this.buyCollateral = buyCollateral;
-    }
-
-    public double getWriteCollateral() {
-        return writeCollateral;
-    }
-
-    public void setWriteCollateral(double writeCollateral) {
-        this.writeCollateral = writeCollateral;
-    }
-
-    public double getStepPrice() {
-        return stepPrice;
-    }
-
-    public void setStepPrice(double stepPrice) {
-        this.stepPrice = stepPrice;
-    }
-
-    @Override
-    public String toString() {
-        return "Option{" +
-                "id='" + id + '\'' +
-                ", strike=" + strike +
-                ", type='" + type + '\'' +
-                ", price=" + price +
-                ", volatility=" + volatility +
-                ", daysToMaturity=" + daysToMaturity +
-                ", buyCollateral=" + buyCollateral +
-                ", writeCollateral=" + writeCollateral +
-                ", stepPrice=" + stepPrice;
-    }
+    @OneToMany(mappedBy = "option")
+    private List<Portfolio> portfolio;
 }

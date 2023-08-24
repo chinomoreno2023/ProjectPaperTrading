@@ -5,7 +5,6 @@
     <title>Options list</title>
 </head>
 <body>
-<a href="/options/2">SFZ</a>
 
 <br>
 <br>
@@ -30,8 +29,8 @@
         <td th:text="${option.daysToMaturity}"></td>
         <td th:text="${option.buyCollateral}"></td>
         <td th:text="${option.writeCollateral}"></td>
-        <td> <a th:href="@{options/buy/{id}(id=${option.optionId})}"/> Buy</td>
-        <td> <a th:href="@{options/write/{id}(id=${option.optionId})}"/> Write</td>
+        <td> <a th:href="@{options/buy/{id}(id=${option.id})}"/> Buy</td>
+        <td> <a th:href="@{options/write/{id}(id=${option.id})}"/> Write</td>
     </tr>
 </table>
 

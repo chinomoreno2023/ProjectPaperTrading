@@ -1,7 +1,7 @@
-package options.papertrading.util;
+package options.papertrading.util.validators;
 
-import options.papertrading.dao.PersonDao;
 import options.papertrading.models.users.Person;
+import options.papertrading.services.PersonsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -9,11 +9,11 @@ import org.springframework.validation.Validator;
 
 @Component
 public class PersonValidator implements Validator {
-    private final PersonDao personDao;
+    private final PersonsService personsService;;
 
     @Autowired
-    public PersonValidator(PersonDao personDao) {
-        this.personDao = personDao;
+    public PersonValidator(PersonsService personsService) {
+        this.personsService = personsService;
     }
 
     @Override
@@ -24,9 +24,7 @@ public class PersonValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Person person = (Person) target;
-        if (personDao.showEmail(((Person) target).getEmail()).isPresent())
+        if (personsService.findByEmail(((Person) target).getEmail()).isPresent())
             errors.rejectValue("email", "", "This email is already taken");
-        if (personDao.showName(((Person) target).getName()).isPresent())
-            errors.rejectValue("name", "","This name is already taken");
     }
 }

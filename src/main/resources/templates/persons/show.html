@@ -5,7 +5,7 @@
   <title>Show</title>
 </head>
 <body>
-<p th:text="${person.name}">VALUE</p>
+<p th:text="${person.username}">VALUE</p>
 <p th:text="${'Email: ' + person.email}">VALUE</p>
 
 <a th:href="@{/persons/{id}/edit(id=${person.id})}">Edit</a>

@@ -1,11 +1,10 @@
 package options.papertrading.models.users;
 
-import lombok.*;
+import lombok.Data;
 import options.papertrading.models.portfolio.Portfolio;
 import org.hibernate.annotations.Cascade;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -48,4 +47,10 @@ public class Person {
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @OneToMany(mappedBy = "owner")
     private List<Portfolio> optionsInPortfolio;
+
+    @Column(name = "activation_code")
+    private String activationCode;
+
+    @Column(name = "is_active")
+    private boolean isActive;
 }

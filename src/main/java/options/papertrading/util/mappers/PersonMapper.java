@@ -1,11 +1,11 @@
 package options.papertrading.util.mappers;
 
-import options.papertrading.dto.PersonDto;
+import options.papertrading.dto.person.PersonDto;
 import options.papertrading.models.users.Person;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PersonMapper {
     PersonMapper INSTANCE = Mappers.getMapper(PersonMapper.class);
     Person convertToPerson(PersonDto personDto);

@@ -1,7 +1,7 @@
 package options.papertrading.security;
 
+import lombok.AllArgsConstructor;
 import options.papertrading.services.PersonDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,13 +12,9 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 
 @Component
+@AllArgsConstructor
 public class AuthProviderImpl implements AuthenticationProvider {
     private final PersonDetailsService personDetailsService;
-
-    @Autowired
-    public AuthProviderImpl(PersonDetailsService personDetailsService) {
-        this.personDetailsService = personDetailsService;
-    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

@@ -1,11 +1,10 @@
 package options.papertrading.controllers.rest;
 
-import options.papertrading.dto.PersonDto;
-import options.papertrading.services.PersonsService;
+import lombok.AllArgsConstructor;
+import options.papertrading.dto.person.PersonDto;
+import options.papertrading.facade.json.JsonPersonFacade;
 import options.papertrading.util.exceptions.PersonErrorResponse;
 import options.papertrading.util.exceptions.PersonNotCreatedException;
-import options.papertrading.util.exceptions.PersonNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -13,33 +12,23 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/rest")
+@AllArgsConstructor
 public class PersonsRestController {
-    private final PersonsService personsService;
-
-    @Autowired
-    public PersonsRestController(PersonsService personsService) {
-        this.personsService = personsService;
-    }
+    private final JsonPersonFacade personFacade;
 
     @GetMapping
-    public List<PersonDto> getPersons() {
-        return personsService.findAll()
-                             .stream()
-                             .map(personsService::convertToPersonDto)
-                             .collect(Collectors.toList());
-    }
-
-    @GetMapping("/{id}")
-    public PersonDto getPerson(@PathVariable("id") int id) {
-        return personsService.convertToPersonDto(personsService.findOne(id));
+    public ResponseEntity<List<PersonDto>> getPersons() {
+        final List<PersonDto> personDtoList = personFacade.getPersons();
+        return personDtoList.isEmpty() ?
+                new ResponseEntity<>(HttpStatus.NO_CONTENT):
+                new ResponseEntity<>(personDtoList, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid PersonDto personDto, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> create(@Valid @RequestBody PersonDto personDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
             List<FieldError> errors = bindingResult.getFieldErrors();
@@ -51,16 +40,8 @@ public class PersonsRestController {
             throw new PersonNotCreatedException(errorMessage.toString());
         }
 
-        personsService.save(personsService.convertToPerson(personDto));
-        return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<PersonErrorResponse> handleException(PersonNotFoundException exception) {
-        PersonErrorResponse personErrorResponse = new PersonErrorResponse(
-                "Person not found", System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(personErrorResponse, HttpStatus.NOT_FOUND);
+        personFacade.create(personDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ExceptionHandler

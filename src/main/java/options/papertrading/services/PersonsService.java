@@ -1,73 +1,79 @@
 package options.papertrading.services;
 
-import options.papertrading.dto.PersonDto;
+import lombok.AllArgsConstructor;
+import options.papertrading.dto.person.PersonDto;
 import options.papertrading.models.users.Person;
 import options.papertrading.repositories.PersonsRepository;
-import options.papertrading.util.exceptions.PersonNotFoundException;
+import options.papertrading.security.PersonDetails;
+import options.papertrading.util.exceptions.PersonNotCreatedException;
 import options.papertrading.util.mappers.PersonMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
+@AllArgsConstructor
 public class PersonsService {
     private final PersonsRepository personsRepository;
     private final PersonMapper personMapper;
 
-    @Autowired
-    public PersonsService(PersonsRepository personsRepository, PersonMapper personMapper) {
-        this.personsRepository = personsRepository;
-        this.personMapper = personMapper;
-    }
-
+    @Transactional(readOnly = true)
     public List<Person> findAll() {
         return personsRepository.findAll();
     }
 
-    public Person findOne(int id) {
-        return personsRepository.findById(id).orElseThrow(PersonNotFoundException::new);
-    }
-
+    @Transactional(readOnly = true)
     public Optional<Person> findByEmail(String email) {
         return personsRepository.findByEmail(email);
     }
 
     @Transactional
     @Modifying
-    public void save(Person person) {
-        enrichPerson(person);
-        personsRepository.save(person);
+    public void create(PersonDto personDto) {
+        personsRepository.save(convertToPerson(personDto));
     }
 
-    @Transactional
-    @Modifying
-    public void update(int id, Person updatedPerson) {
-        updatedPerson.setId(id);
-        personsRepository.save(updatedPerson);
-    }
-
-    @Transactional
-    @Modifying
-    public void delete(int id) {
-        personsRepository.deleteById(id);
-    }
-
-    private void enrichPerson(Person person) {
-        person.setCurrentNetPosition(0);
-        person.setOpenLimit(1000000);
-    }
 
     public Person convertToPerson(PersonDto personDto) {
-        Person person = personMapper.convertToPerson(personDto);
-        person.setPassword("123");
-        return person;
+        return personMapper.convertToPerson(personDto);
     }
 
     public PersonDto convertToPersonDto(Person person) {
         return personMapper.convertToPersonDto(person);
+    }
+
+    public PersonNotCreatedException showPersonError(BindingResult bindingResult) {
+        StringBuilder errorMessage = null;
+        if (bindingResult.hasErrors()) {
+            errorMessage = new StringBuilder();
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            for (FieldError error : errors) {
+                errorMessage.append(error.getField())
+                        .append(" - ").append(error.getDefaultMessage())
+                        .append(";");
+            }
+        }
+        return new PersonNotCreatedException(errorMessage.toString());
+    }
+
+    @Transactional(readOnly = true)
+    public Person getCurrentPerson() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+        return personDetails.getPerson();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PersonDto> getPersons() {
+        return findAll().stream()
+                        .map(this::convertToPersonDto)
+                        .collect(Collectors.toList());
     }
 }

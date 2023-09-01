@@ -1,6 +1,6 @@
 package options.papertrading.util.validators;
 
-import options.papertrading.models.portfolio.Portfolio;
+import options.papertrading.dto.option.OptionDto;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -10,14 +10,14 @@ public class VolumeValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return Portfolio.class.equals(clazz);
+        return OptionDto.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        Portfolio portfolio = (Portfolio) target;
-        if (portfolio.getVolume() <= 0) {
-            errors.rejectValue("volume", "", "Volume should not be empty");
+        OptionDto optionDto = (OptionDto) target;
+        if (optionDto.getVolume() <= 0) {
+            errors.rejectValue("volume", "", "Enter correct volume");
         }
     }
 }

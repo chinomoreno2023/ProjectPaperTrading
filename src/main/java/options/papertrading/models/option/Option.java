@@ -1,9 +1,7 @@
 package options.papertrading.models.option;
 
-import lombok.*;
+import lombok.Data;
 import options.papertrading.models.portfolio.Portfolio;
-import org.springframework.context.annotation.Scope;
-
 import javax.persistence.*;
 import java.util.List;
 

@@ -6,8 +6,8 @@
 </head>
 <body>
 
-<form name="f" method="post" action="/process_login">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+<form name="f" method="post" style="max-width: 400px; margin: 0 auto;">
+<!--    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
 
     <label for="email">Введите логин: </label>
     <input type="text" name="email" id="email"/>

@@ -1,11 +1,9 @@
 package options.papertrading.models.portfolio;
 
-import lombok.*;
+import lombok.Data;
 import options.papertrading.models.option.Option;
 import options.papertrading.models.users.Person;
 import org.hibernate.annotations.Cascade;
-import org.springframework.context.annotation.Scope;
-
 import javax.persistence.*;
 
 @Entity
@@ -21,16 +19,16 @@ public class Portfolio {
     @Column(name = "volume")
     private int volume;
 
-    @Column(name = "trade_price")
+    @Column(name = "trade_price", updatable = false)
     private double tradePrice;
 
-    @Column(name = "volatility_when_was_trade")
+    @Column(name = "volatility_when_was_trade", updatable = false)
     private double volatilityWhenWasTrade;
 
     @Column(name = "variat_margin")
     private double variatMargin;
 
-    @Column(name = "collateral_when_was_trade")
+    @Column(name = "collateral_when_was_trade", updatable = false)
     private double collateralWhenWasTrade;
 
     @Cascade(org.hibernate.annotations.CascadeType.REFRESH)

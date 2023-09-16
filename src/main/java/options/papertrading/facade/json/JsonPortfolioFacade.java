@@ -7,14 +7,14 @@ import options.papertrading.services.OptionsService;
 import options.papertrading.services.PersonsService;
 import options.papertrading.services.PortfoliosService;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @AllArgsConstructor
 @Component
 public class JsonPortfolioFacade {
     private final PortfoliosService portfoliosService;
-    private final PersonsService personsService;
-    private final OptionsService optionsService;
 
     public List<PortfolioDto> showAllPortfolios() {
         return portfoliosService.showAllPortfolios();

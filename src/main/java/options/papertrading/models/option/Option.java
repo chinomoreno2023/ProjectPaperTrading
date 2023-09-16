@@ -1,6 +1,7 @@
 package options.papertrading.models.option;
 
 import lombok.Data;
+import lombok.ToString;
 import options.papertrading.models.portfolio.Portfolio;
 import javax.persistence.*;
 import java.util.List;

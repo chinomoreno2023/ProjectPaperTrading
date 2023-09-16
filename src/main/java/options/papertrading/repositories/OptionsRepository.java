@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OptionsRepository extends JpaRepository<Option, String> {
-    public Option findByStrikeAndTypeAndDaysToMaturity(int strike, String type, int daysToMaturity);
+    Option findByStrikeAndTypeAndDaysToMaturity(int strike, String type, int daysToMaturity);
+    Option findOneById(String id);
 }

@@ -12,4 +12,5 @@ public class OptionDto {
     private int daysToMaturity;
     private double buyCollateral;
     private double writeCollateral;
+    private byte buyOrWrite;
 }

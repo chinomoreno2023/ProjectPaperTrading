@@ -1,4 +1,4 @@
-package options.papertrading.models.users;
+package options.papertrading.models.person;
 
 import lombok.Data;
 import options.papertrading.models.portfolio.Portfolio;
@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ public class Person {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "username")
     @NotEmpty(message = "Имя не может быть пустым")
@@ -44,7 +45,6 @@ public class Person {
     @Column(name = "open_limit")
     private double openLimit;
 
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @OneToMany(mappedBy = "owner")
     private List<Portfolio> optionsInPortfolio;
 

@@ -2,7 +2,7 @@ package options.papertrading.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import options.papertrading.models.users.Person;
+import options.papertrading.models.person.Person;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

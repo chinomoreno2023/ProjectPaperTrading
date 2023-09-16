@@ -1,7 +1,7 @@
 package options.papertrading.services;
 
 import lombok.AllArgsConstructor;
-import options.papertrading.models.users.Person;
+import options.papertrading.models.person.Person;
 import options.papertrading.repositories.PersonsRepository;
 import options.papertrading.security.PersonDetails;
 import org.springframework.security.core.userdetails.UserDetails;

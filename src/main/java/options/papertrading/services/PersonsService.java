@@ -2,11 +2,12 @@ package options.papertrading.services;
 
 import lombok.AllArgsConstructor;
 import options.papertrading.dto.person.PersonDto;
-import options.papertrading.models.users.Person;
+import options.papertrading.models.person.Person;
 import options.papertrading.repositories.PersonsRepository;
 import options.papertrading.security.PersonDetails;
 import options.papertrading.util.exceptions.PersonNotCreatedException;
 import options.papertrading.util.mappers.PersonMapper;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

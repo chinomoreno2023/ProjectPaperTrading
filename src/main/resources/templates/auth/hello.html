@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Test page</title>
+</head>
+<body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("result").value = "0";
+    });
+</script>
+
+<p>Number 1: <span th:text="${testYourIq.number1}"></span></p>
+<p>Number 2: <span th:text="${testYourIq.number2}"></span></p>
+
+<form th:method="POST" th:action="@{/auth/hello}" th:object="${testYourIq}">
+    <label for="result">Enter result: </label>
+    <input type="number" th:field="*{result}" id="result"/>
+    <div style="color:red" th:if="${#fields.hasErrors('result')}" th:errors="*{result}"></div>
+    <input type="hidden" th:field="*{number1}" th:value="${testYourIq.number1}"/>
+    <input type="hidden" th:field="*{number2}" th:value="${testYourIq.number2}"/>
+    <input type="submit" value="Check"/>
+</form>
+
+</body>
+</html>

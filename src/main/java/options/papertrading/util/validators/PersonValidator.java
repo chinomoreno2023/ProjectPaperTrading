@@ -1,7 +1,7 @@
 package options.papertrading.util.validators;
 
 import lombok.AllArgsConstructor;
-import options.papertrading.models.users.Person;
+import options.papertrading.models.person.Person;
 import options.papertrading.services.PersonsService;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -19,7 +19,6 @@ public class PersonValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        Person person = (Person) target;
         if (personsService.findByEmail(((Person) target).getEmail()).isPresent())
             errors.rejectValue("email", "", "This email is already taken");
     }

@@ -24,6 +24,10 @@ public class OptionsService {
         return optionsRepository.findAll();
     }
 
+    public Option findByOptionId(String Id) {
+        return optionsRepository.findOneById(Id);
+    }
+
     public OptionDto convertToOptionDto(Option option) {
         return optionMapper.convertToOptionDto(option);
     }

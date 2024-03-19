@@ -1,13 +1,13 @@
 package options.papertrading.models.person;
 
 import lombok.Data;
+import options.papertrading.models.journal.Journal;
 import options.papertrading.models.portfolio.Portfolio;
-import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -48,9 +48,27 @@ public class Person {
     @OneToMany(mappedBy = "owner")
     private List<Portfolio> optionsInPortfolio;
 
+    @OneToMany(mappedBy = "owner")
+    private List<Journal> journal;
+
     @Column(name = "activation_code")
     private String activationCode;
 
     @Column(name = "is_active")
     private boolean isActive;
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                ", currentNetPosition=" + currentNetPosition +
+                ", openLimit=" + openLimit +
+                ", activationCode='" + activationCode + '\'' +
+                ", isActive=" + isActive +
+                '}';
+    }
 }

@@ -1,7 +1,6 @@
 package options.papertrading.models.option;
 
 import lombok.Data;
-import lombok.ToString;
 import options.papertrading.models.portfolio.Portfolio;
 import javax.persistence.*;
 import java.util.List;
@@ -41,4 +40,19 @@ public class Option {
 
     @OneToMany(mappedBy = "option")
     private List<Portfolio> portfolio;
+
+    @Override
+    public String toString() {
+        return "Option{" +
+                "id='" + id + '\'' +
+                ", strike=" + strike +
+                ", type='" + type + '\'' +
+                ", price=" + price +
+                ", volatility=" + volatility +
+                ", daysToMaturity=" + daysToMaturity +
+                ", buyCollateral=" + buyCollateral +
+                ", writeCollateral=" + writeCollateral +
+                ", stepPrice=" + stepPrice +
+                '}';
+    }
 }

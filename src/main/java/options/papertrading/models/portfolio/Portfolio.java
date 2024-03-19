@@ -3,9 +3,6 @@ package options.papertrading.models.portfolio;
 import lombok.Data;
 import options.papertrading.models.option.Option;
 import options.papertrading.models.person.Person;
-import org.hibernate.annotations.Cascade;
-import org.springframework.context.annotation.Scope;
-
 import javax.persistence.*;
 
 @Entity
@@ -40,4 +37,18 @@ public class Portfolio {
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
+
+    @Override
+    public String toString() {
+        return "Portfolio{" +
+                "id=" + id +
+                ", volume=" + volume +
+                ", tradePrice=" + tradePrice +
+                ", volatilityWhenWasTrade=" + volatilityWhenWasTrade +
+                ", variatMargin=" + variatMargin +
+                ", collateralWhenWasTrade=" + collateralWhenWasTrade +
+                ", option=" + option.getId() +
+                ", owner=" + owner.getUsername() +
+                '}';
+    }
 }

@@ -1,6 +1,8 @@
 package options.papertrading.services;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import options.papertrading.models.person.Person;
 import options.papertrading.repositories.PersonsRepository;
 import options.papertrading.security.PersonDetails;
@@ -10,14 +12,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class PersonDetailsService implements UserDetailsService {
     private final PersonsRepository personsRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(@NonNull String username) {
         Optional<Person> person = personsRepository.findByEmail(username);
+        log.info("Finding user by {}. Result: {}", username, person);
         if (person.isEmpty()) throw new UsernameNotFoundException("User not found");
         return new PersonDetails(person.get());
     }

@@ -16,7 +16,7 @@ public class TestIqValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         TestYourIq testYourIq = (TestYourIq) target;
-        if (testYourIq.getResult() != testYourIq.getNumber2() * 100 / testYourIq.getNumber1())
+        if (testYourIq.getResult() != (testYourIq.getNumber2() * 100 / testYourIq.getNumber1()) - 100)
             errors.rejectValue("result", "", "Result is wrong");
     }
 }

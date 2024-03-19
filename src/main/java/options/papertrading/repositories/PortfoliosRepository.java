@@ -12,4 +12,5 @@ import java.util.List;
 public interface PortfoliosRepository extends JpaRepository<Portfolio, Long> {
     List<Portfolio> findAllByOwner(Person owner);
     Portfolio findByOwnerAndOption(Person owner, Option option);
+    List<Portfolio> findAll();
 }

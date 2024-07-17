@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Портфель | Options Paper Trading</title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333; /* серый асфальтовый фон */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%; /* Изменено для адаптации к ширине экрана */
+        }
+
+        table {
+            background-color: white; /* серый фон таблицы */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(253, 72, 227, 0.5);
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+            overflow-x: auto; /* Добавлено для горизонтальной прокрутки */
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        th, td {
+            padding: 5px; /* Уменьшаем отступы внутри ячеек */
+            font-size: 12px; /* Уменьшаем размер шрифта */
+        }
+
+        th {
+            background-color: #ccc; /* платиновый цвет заголовков */
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* серый фон для четных строк */
+        }
+
+        tr:hover {
+            background-color: #ddd; /* изменение цвета строки при наведении */
+        }
+
+        .vertical-table {
+            display: block; /* Добавлено для поддержки горизонтальной прокрутки */
+            width: 100%;
+            overflow-x: auto; /* Добавлено для горизонтальной прокрутки */
+        }
+
+        .vertical-table th,
+        .vertical-table td {
+            text-align: left;
+        }
+
+        .sticky-column th:first-child,
+        .sticky-column td:first-child {
+            position: sticky;
+            left: 0;
+            text-align: right;
+            background-color: #ccc; /* Цвет фона закрепленного столбца */
+            z-index: 1; /* Устанавливаем z-index выше, чем у остальных ячеек */
+            width: 50px;
+        }
+
+        h2 {
+            color: #eee; /* Цвет заголовков */
+            padding: 8px 12px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(253, 72, 227, 0.5);
+            background-color: rgba(32, 32, 32, 0.4);
+        }
+
+        .styled-button {
+            background-color: #f84ed3; /* платиновый цвет кнопок */
+            color: #eee; /* цвет текста кнопок */
+            font-weight: bold;
+            border-radius: 3px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            padding: 8px 5px;
+            margin-top: 1px;
+            margin-bottom: 5px;
+        }
+
+        .styled-button:hover {
+            background-color: #eee; /* изменение цвета кнопок при наведении */
+            color: #f84ed3; /* изменение цвета кнопок при наведении */
+        }
+
+        .modal {
+            display: none; /* Скрываем модальное окно по умолчанию */
+            position: fixed;
+            z-index: 2;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); /* Черный полупрозрачный фон */
+            padding-top: 50px;
+            animation-name: fade-in;
+            animation-duration: 0.1s;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: white;
+            border-radius: 8px;
+            margin: auto; /* Центрируем по вертикали и горизонтали */
+            padding: 20px;
+            border: 1px solid #888;
+            max-width: 285px; /* Максимальная ширина модального окна */
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute; /* Добавлено для абсолютного позиционирования */
+            top: 5px; /* Расположение крестика от верхнего края */
+            right: 5px; /* Расположение крестика от правого края */
+            font-weight: bold;
+            cursor: pointer; /* Добавлено свойство cursor */
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-content form p {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        .modal-content form input[type="text"],
+        .modal-content form input[type="number"],
+        .modal-content form span {
+            flex-grow: 1;
+            width: 160px;
+        }
+
+        .modal-content form label {
+            text-align: right;
+            width: 100px; /* Устанавливаем минимальную ширину для меток */
+            margin-right: 5px;
+        }
+
+        .menu-bar {
+            display: flex;
+            justify-content: space-between;
+            position: fixed; /* Закрепляем меню */
+            top: 0;
+            right: 0;
+            background-color: rgba(51, 51, 51, 0.2);
+            padding: 10px;
+            color: #eee;
+            z-index: 2;
+        }
+
+        .menu-bar .menu-toggle {
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .menu-bar .menu-toggle div {
+            width: 100%;
+            height: 4px;
+            background-color: white;
+        }
+
+        .menu-bar .menu-content {
+            display: none;
+            flex-direction: column;
+            background-color: #444;
+            width: 200px; /* Ширина меню */
+            position: absolute;
+            top: 50px;
+            right: 0; /* Исходная позиция справа */
+            transform: translateX(0%); /* Перемещаем меню влево */
+            padding: 10px 0;
+            animation-name: fade-in;
+            animation-duration: 0.2s;
+            border-radius: 4px;
+        }
+
+        .menu-bar .menu-content a {
+            color: #eee;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+
+        .menu-bar .menu-content a:hover {
+            background-color: #555;
+        }
+
+        .modal-content form button {
+            border-radius: 4px;
+            width: auto; /* Устанавливаем ширину кнопки по содержимому */
+            margin: 5px auto 0; /* Размещаем кнопку по центру сверху с отступом сверху */
+            padding: 5px 8px; /* Добавляем отступы вокруг текста кнопки */
+        }
+
+        .modal-content button[type="button"] {
+            background-color: #f84ed3;
+            color: #eee;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-content button[type="button"]:hover {
+            background-color: #eee;
+            color: #f84ed3;
+        }
+    </style>
+</head>
+<body>
+
+<script src="/js/buttons.js"></script>
+<script src="/js/menu.js"></script>
+
+<div class="menu-bar">
+    <div class="menu-toggle">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div class="menu-content" id="menuContent">
+        <a href="/portfolio/memo">Памятка</a>
+        <a href="#">Портфель</a>
+        <a href="/portfolio/options?selectedValue=SF">Опционы</a>
+        <a href="/portfolio/journal">Журнал сделок</a>
+        <a href="/auth/profile">Профиль</a>
+        <a href="" onclick="logout()">Разлогиниться</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <h2>Портфель</h2>
+
+    <div>
+        <select id="portfolioSelector" class="styled-button">
+            <option value="SF">SPDR S&P 500 ETF Trust</option>
+            <option value="BR">Нефть Brent</option>
+            <option value="SR">Сбербанк</option>
+            <option value="Si">USD</option>
+            <option value="MX">Индекс Мосбиржи</option>
+            <option value="RI">Индекс РТС</option>
+            <option value="GZ">Газпром</option>
+        </select>
+    </div>
+    <div>
+        <button class="styled-button" onclick="showOptionsList()">Список опционов</button>
+        <button class="styled-button" onclick="showChart()">График</button>
+    </div>
+
+    <table id="portfolioTable" class="vertical-table sticky-column">
+        <tr>
+            <th>Опцион</th>
+            <td th:each="portfolio : ${portfolios}" th:text="${portfolio.id}"></td>
+        </tr>
+        <tr>
+            <th>Страйк</th>
+            <td th:each="portfolio : ${portfolios}" th:text="${portfolio.strike}"></td>
+        </tr>
+        <tr>
+            <th>Тип</th>
+            <td th:each="portfolio : ${portfolios}" th:text="${portfolio.type}"></td>
+        </tr>
+        <tr>
+            <th>Объём</th>
+            <td th:each="portfolio : ${portfolios}" th:text="${portfolio.volume}"></td>
+        </tr>
+        <tr>
+            <th>Маржа</th>
+            <td th:each="portfolio : ${portfolios}" id="marginCell" class="trade-price" th:text="${portfolio.variatMargin}"></td>
+        </tr>
+        <tr>
+            <th>Цена сделки / текущая</th>
+            <td th:each="portfolio : ${portfolios}" class="trade-price" th:text="${portfolio.tradePrice + ' / ' + portfolio.price}"></td>
+        </tr>
+        <tr>
+            <th>Волатильность при сделке / текущая</th>
+            <td th:each="portfolio : ${portfolios}" class="trade-price" th:text="${portfolio.volatilityWhenWasTrade + ' / ' + portfolio.volatility}"></td>
+        </tr>
+        <tr>
+            <th>Дней до экспирации</th>
+            <td th:each="portfolio : ${portfolios}" th:text="${portfolio.daysToMaturity}"></td>
+        </tr>
+        <tr>
+            <th>Залог сделки</th>
+            <td th:each="portfolio : ${portfolios}" class="trade-price" th:text="${portfolio.collateralWhenWasTrade}"></td>
+        </tr>
+        <tr>
+            <th>Залог для покупки текущий</th>
+            <td th:each="portfolio : ${portfolios}" class="trade-price" th:text="${portfolio.buyCollateral}"></td>
+        </tr>
+        <tr>
+            <th>Залог для продажи текущий</th>
+            <td th:each="portfolio : ${portfolios}" class="trade-price" th:text="${portfolio.writeCollateral}"></td>
+        </tr>
+        <tr>
+            <th>Покупка</th>
+            <td th:each="option : ${options}">
+                <a href="#" th:style="'color: #f84ed3; text-decoration: none;'" th:attr="onclick='openModal(\'' + ${option.id} + '\', \'' + ${option.strike} + '\', \'' + ${option.type} + '\', \'' + ${option.daysToMaturity} + '\', \'' + ${option.price} + '\', \'' + ${option.buyCollateral} + '\', \'buy\')'">Купить</a>
+            </td>
+        </tr>
+        <tr>
+            <th>Продажа</th>
+            <td th:each="option : ${options}">
+                <a href="#" th:style="'color: #f84ed3; text-decoration: none;'" th:attr="onclick='openModal(\'' + ${option.id} + '\', \'' + ${option.strike} + '\', \'' + ${option.type} + '\', \'' + ${option.daysToMaturity} + '\', \'' + ${option.price} + '\', \'' + ${option.writeCollateral} + '\', \'write\')'">Продать</a>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Ограничения портфеля</h2>
+
+    <table id="limitsTable" class="vertical-table sticky-column">
+        <tr>
+            <th>Доступные средства</th>
+            <td id="openLimitCell" class="trade-price" th:text="${owner.openLimit}"></td>
+            <td><a href="#" style="color: #f84ed3; text-decoration: none;" id="reset">Сбросить</a></td>
+        </tr>
+        <tr>
+            <th>Текущая позиция</th>
+            <td id="currentNetPositionCell" class="trade-price" th:text="${owner.currentNetPosition}"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <form id="optionForm" action="/portfolio/confirmation" method="post">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+            <p><label style="text-align: right">Опцион:</label> <input type="text" name="id" id="optionIdField" readonly/></p>
+            <p><label>Страйк:</label> <input type="number" name="strike" id="strikeField" readonly/></p>
+            <p><label>Тип:</label> <input type="text" name="type" id="typeField" readonly/></p>
+            <p><label>Дней до экспирации:</label> <input type="number" name="daysToMaturity" id="daysToMaturityField" readonly/></p>
+            <p><label>Цена:</label> <span id="priceFieldDisplay"></span></p>
+            <input type="hidden" name="price" id="priceField"/>
+            <p><label>Залог:</label> <span id="collateralFieldDisplay"></span></p>
+            <input type="hidden" name="collateral" id="collateralField"/>
+            <input type="hidden" name="buyOrWrite" id="buyOrWriteField"/>
+            <p><label>Объём:</label> <input type="number" id="volumeField" name="volume" value="0" min="1" step="1"> </p>
+            <button type="button" onclick="confirmOperation()">Подтвердить</button>
+        </form>
+        <div id="errorMessage" class="error-message" style="color: red; text-align: center"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const marginCells = document.querySelectorAll('#marginCell');
+        marginCells.forEach(cell => {
+            const value = parseFloat(cell.textContent);
+            if (value > 0) {
+                cell.style.backgroundColor = 'rgba(84,248,78,0.33)';
+            } else if (value < 0) {
+                cell.style.backgroundColor = 'rgba(255,0,0,0.36)';
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var resetButton = document.getElementById("reset");
+        var csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
+
+        resetButton.addEventListener("click", function () {
+            var confirmReset = confirm("Сбросить все данные портфеля? Все позиции будут закрыты, журнал сделок очищен, а доступные средства снова будут равны 1000000р.");
+            if (confirmReset) {
+                fetch("/portfolio/reset", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': csrfToken // добавляем CSRF токен в заголовок
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error("Ошибка при попытке сбросить данные");
+                        }
+                    })
+                    .then(message => {
+                        alert(message); // Отображаем сообщение об успешном удалении журнала
+                        window.location.href = "/portfolio"; // Перенаправляем на страницу /portfolio
+                    })
+                    .catch(error => {
+                        alert(error.message); // Отображаем сообщение об ошибке
+                    });
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Получаем ячейки по ID
+        const openLimitCell = document.getElementById('openLimitCell');
+        const currentNetPositionCell = document.getElementById('currentNetPositionCell');
+
+        // Получаем значения доступных средств и текущей позиции
+        const openLimit = parseFloat(openLimitCell.textContent);
+        const currentNetPosition = parseFloat(currentNetPositionCell.textContent);
+
+        // Проверяем условие и меняем цвет фона ячейки
+        if (openLimit < currentNetPosition) {
+            openLimitCell.style.backgroundColor = 'rgba(255,0,0,0.36)';
+        }
+        document.getElementById("portfolioTable").style.visibility = "visible";
+        document.getElementById("portfolioTable").style.opacity = "1";
+        document.getElementById("limitsTable").style.visibility = "visible";
+        document.getElementById("limitsTable").style.opacity = "1";
+    });
+</script>
+
+<script src="/js/optionsModal.js"></script>
+<script src="/js/tradePriceFix.js"></script>
+<script src="/js/charts.js"></script>
+
+</body>
+</html>

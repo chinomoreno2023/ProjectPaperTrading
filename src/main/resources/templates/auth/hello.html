@@ -1,27 +1,146 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Капча | Options Paper Trading</title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333; /* серый асфальтовый фон */
+            color: #eee; /* белый цвет текста */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            text-align: center; /* выравнивание текста по центру */
+            visibility: hidden;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column; /* расположение элементов по вертикали */
+            align-items: flex-end; /* выравнивание элементов по левому краю */
+            z-index: 1;
+        }
+
+        form {
+            margin-top: 20px; /* отступ сверху */
+            display: flex;
+            flex-direction: column; /* расположение элементов по вертикали */
+            align-items: flex-start; /* выравнивание элементов по левому краю */
+            max-width: 250px;
+            width: 100%;
+            border-radius: 8px;
+            animation-name: fade-in;
+            animation-duration: 0.1s;
+        }
+        input[type="number"],
+        input[type="submit"] {
+            padding: 10px;
+            margin-top: 10px; /* отступ между элементами */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+
+        }
+
+        input[type="number"] {
+            width: calc(100% - 22px); /* Вычисляем ширину, оставляя место для границы и внутренних отступов */
+
+        }
+
+        input[type="number"]:focus {
+            border-color: #333;
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background-color: #f84ed3;
+            color: #eee; /* цвет текста кнопок */
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #eee;
+            color: #f84ed3;/* изменение цвета кнопок при наведении */
+        }
+
+        .typing-animation {
+            overflow: hidden; /* скрытие лишних символов */
+            white-space: nowrap; /* чтобы текст печатался в одну строку */
+            display: inline-block; /* чтобы анимация происходила внутри элемента */
+            animation: typing 0.4s steps(20) forwards; /* долгая анимация */
+            text-align: left; /* выравнивание текста слева */
+        }
+
+        @keyframes typing {
+            from { width: 0; } /* начальная ширина текста */
+            to { width: 100%; } /* конечная ширина текста */
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            max-width: 250px;
+            height: auto;
+        }
+    </style>
 </head>
+
 <body>
+<div class="form-container">
+
+    <div class="image-container">
+        <img src="/logo.png" alt="logo" id="logo">
+    </div>
+
+    <p style="margin-bottom: 20px;">Начальная цена: <span th:text="${testYourIq.number1}"></span></p>
+    <p style="margin-bottom: 10px;">Новая цена: <span th:text="${testYourIq.number2}"></span></p>
+
+    <form id="testForm" th:method="POST" th:action="@{/auth/hello}" th:object="${testYourIq}">
+        <label class="typing-animation">На сколько % увеличилась цена?<br>Введите только целую часть</label> <!-- Анимация текста -->
+        <input type="number" style="box-shadow: 0 0 8px rgba(253, 72, 227, 0.5);" th:field="*{result}" id="result" min="0" step="1"/>
+        <div style="color:red; text-align: center" th:if="${#fields.hasErrors('result')}" th:errors="*{result}"></div>
+        <input type="hidden" th:field="*{number1}" th:value="${testYourIq.number1}"/>
+        <input type="hidden" th:field="*{number2}" th:value="${testYourIq.number2}"/>
+        <input type="submit" value="Проверить"/>
+    </form>
+</div>
+
+<script>
+    // JavaScript code to show elements after image is loaded
+    document.getElementById('logo').onload = function() {
+        document.body.style.visibility = 'visible'; // Показать весь контент после загрузки изображения
+        const forms = document.querySelectorAll(".container form");
+        forms.forEach(form => form.classList.add("visible"));
+    };
+</script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("result").value = "0";
+        var form = document.getElementById("testForm");
+        form.addEventListener("submit", function (event) {
+            var resultInput = document.getElementById("result");
+            if (!resultInput.value.trim()) { // Проверка на пустое значение или только пробелы
+                resultInput.value = "0";
+            }
+        });
     });
 </script>
 
-<p>Number 1: <span th:text="${testYourIq.number1}"></span></p>
-<p>Number 2: <span th:text="${testYourIq.number2}"></span></p>
-
-<form th:method="POST" th:action="@{/auth/hello}" th:object="${testYourIq}">
-    <label for="result">Enter result: </label>
-    <input type="number" th:field="*{result}" id="result"/>
-    <div style="color:red" th:if="${#fields.hasErrors('result')}" th:errors="*{result}"></div>
-    <input type="hidden" th:field="*{number1}" th:value="${testYourIq.number1}"/>
-    <input type="hidden" th:field="*{number2}" th:value="${testYourIq.number2}"/>
-    <input type="submit" value="Check"/>
-</form>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("result").value = ""; // Очищаем поле result
+    });
+</script>
 
 </body>
 </html>

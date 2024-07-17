@@ -2,25 +2,152 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
-</head>
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация | Options Paper Trading</title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333; /* серый асфальтовый фон */
+            color: #eee; /* белый цвет текста */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            visibility: hidden;
+        }
 
-<form th:method="POST" th:action="@{/auth/registration}" th:object="${person}">
-    <label for="username">Введите имя пользователя: </label>
-    <input type="text" th:field="*{username}" id="username"/>
-    <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</div>
-    <br/>
-    <label for="email">Введите email: </label>
-    <input type="email" th:field="*{email}" id="email"/>
-    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
-    <br/>
-    <label for="password">Введите пароль: </label>
-    <input type="password" th:field="*{password}" id="password"/>
-    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
-    <br/>
-    <input type="submit" value="Sign up!"/>
-</form>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 250px;
+        }
+
+        .form-container {
+            background-color: white; /* белый цвет фона контейнера */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(253, 72, 227, 0.5);
+            margin-bottom: 20px;
+            animation-name: fade-in;
+            animation-duration: 0.1s;
+        }
+
+        form {
+            width: 250px;
+            text-align: left; /* Выравнивание текста внутри формы */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box; /* Размеры поля ввода включая padding и border */
+        }
+
+        input[type="submit"] {
+            background-color: #f84ed3;
+            color: #eee;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #eee;
+            color: #f84ed3;
+        }
+
+        .error {
+            color: red;
+            margin-top: 5px;
+            text-align: center;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            max-width: 250px;
+            height: auto;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="image-container">
+        <img src="/logo.png" alt="logo" id="logo">
+    </div>
+
+    <div class="form-container">
+    <div>
+    <form th:method="POST" th:action="@{/auth/registration}" th:object="${person}">
+        <label for="username">Введите имя:</label>
+        <input type="text" th:field="*{username}" id="username" autocomplete="name"/>
+        <div class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+
+        <label for="email">Введите почту:</label>
+        <input type="email" th:field="*{email}" id="email" autocomplete="username"/>
+        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        <div class="error" th:if="${emailError}"> <p th:text="${emailError}"></p></div>
+
+        <label for="password">Введите пароль:</label>
+        <input type="password" th:field="*{password}" id="password" autocomplete="new-password"/>
+        <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+
+        <label for="retypedPassword">Введите пароль ещё раз:</label>
+        <input type="password" id="retypedPassword" autocomplete="new-password"/>
+        <div class="error" id="retypedPasswordError"></div>
+
+        <input type="submit" value="Регистрация"/>
+    </form>
+    </div>
+</div>
+</div>
+
+<script>
+    // JavaScript code to show elements after image is loaded
+    document.getElementById('logo').onload = function() {
+        document.body.style.visibility = 'visible'; // Показать весь контент после загрузки изображения
+        const forms = document.querySelectorAll(".container form");
+        forms.forEach(form => form.classList.add("visible"));
+    };
+
+    document.querySelector('form').onsubmit = function(event) {
+        const password = document.getElementById('password').value;
+        const retypedPassword = document.getElementById('retypedPassword').value;
+        const errorDiv = document.getElementById('retypedPasswordError');
+
+        if (password !== retypedPassword) {
+            event.preventDefault();
+            errorDiv.textContent = 'Пароли не совпадают';
+        } else {
+            errorDiv.textContent = ''; // Очистить сообщение об ошибке, если пароли совпадают
+        }
+    };
+</script>
 
 </body>
 </html>

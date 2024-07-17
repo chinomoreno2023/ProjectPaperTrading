@@ -20,8 +20,8 @@ public class AuthProviderImpl implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         UserDetails personDetails = personDetailsService.loadUserByUsername(username);
-
         String password = authentication.getCredentials().toString();
+
         if (!password.equals(personDetails.getPassword()))
             throw new BadCredentialsException("Password incorrect");
 

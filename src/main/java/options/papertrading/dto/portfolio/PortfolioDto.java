@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class PortfolioDto {
+    private String id;
     private int strike;
     private String type;
     private int volume;
@@ -18,4 +19,5 @@ public class PortfolioDto {
     private double variatMargin;
     private double currentNetPosition;
     private double openLimit;
+    private double stepPrice;
 }

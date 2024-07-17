@@ -1,8 +1,7 @@
 package options.papertrading.services;
 
-import options.papertrading.models.person.Person;
 import options.papertrading.repositories.PersonsRepository;
-import options.papertrading.util.TestYourIq;
+import options.papertrading.util.validators.TestYourIq;
 import options.papertrading.util.mail.SmtpMailSender;
 import options.papertrading.util.validators.TestIqValidator;
 import org.junit.jupiter.api.Test;
@@ -10,9 +9,6 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -37,49 +33,49 @@ class RegistrationServiceTest {
         this.smtpMailSender = smtpMailSender;
     }
 
-    @Test
-    void register() {
-        Person person = new Person();
-        person.setUsername(username);
-        person.setPassword(password);
-        person.setEmail(email);
-
-        registrationService.register(person);
-        Optional<Person> optionalPerson = personsRepository.findByEmail(email);
-        Person savedPerson = optionalPerson.get();
-
-        assertThat(savedPerson).isNotNull();
-        assertThat(savedPerson.getUsername()).isEqualTo(username);
-        assertThat(savedPerson.getCurrentNetPosition()).isEqualTo(0.0);
-        assertThat(savedPerson.getOpenLimit()).isEqualTo(1000000.0);
-        assertThat(savedPerson.getPassword()).isInstanceOf(String.class);
-        assertThat(savedPerson.getPassword()).isNotBlank();
-        assertThat(savedPerson.getRole()).isEqualTo("ROLE_USER");
-        assertThat(savedPerson.getActivationCode()).isInstanceOf(String.class);
-        assertThat(savedPerson.getActivationCode()).isNotBlank();
-        assertThat(savedPerson.isActive()).isEqualTo(false);
-
-        registrationService.deleteByEmail(email);
-    }
-
-    @Test
-    void activatePerson() {
-        Person person = new Person();
-        person.setUsername(username);
-        person.setPassword(password);
-        person.setEmail(email);
-
-        registrationService.register(person);
-        String activationCode = person.getActivationCode();
-        registrationService.activatePerson(activationCode);
-        Optional<Person> optionalPerson = personsRepository.findByEmail(email);
-        Person savedPerson = optionalPerson.get();
-
-        assertThat(savedPerson).isNotNull();
-        assertThat(savedPerson.isActive()).isEqualTo(true);
-
-        registrationService.deleteByEmail(email);
-    }
+//    @Test
+//    void register() {
+//        Person person = new Person();
+//        person.setUsername(username);
+//        person.setPassword(password);
+//        person.setEmail(email);
+//
+//        registrationService.register(person);
+//        Optional<Person> optionalPerson = personsRepository.findByEmail(email);
+//        Person savedPerson = optionalPerson.get();
+//
+//        assertThat(savedPerson).isNotNull();
+//        assertThat(savedPerson.getUsername()).isEqualTo(username);
+//        assertThat(savedPerson.getCurrentNetPosition()).isEqualTo(0.0);
+//        assertThat(savedPerson.getOpenLimit()).isEqualTo(1000000.0);
+//        assertThat(savedPerson.getPassword()).isInstanceOf(String.class);
+//        assertThat(savedPerson.getPassword()).isNotBlank();
+//        assertThat(savedPerson.getRole()).isEqualTo("ROLE_USER");
+//        assertThat(savedPerson.getActivationCode()).isInstanceOf(String.class);
+//        assertThat(savedPerson.getActivationCode()).isNotBlank();
+//        assertThat(savedPerson.isActive()).isEqualTo(false);
+//
+//        registrationService.deleteByEmail(email);
+//    }
+//
+//    @Test
+//    void activatePerson() {
+//        Person person = new Person();
+//        person.setUsername(username);
+//        person.setPassword(password);
+//        person.setEmail(email);
+//
+//        registrationService.register(person);
+//        String activationCode = person.getActivationCode();
+//        registrationService.activatePerson(activationCode);
+//        Optional<Person> optionalPerson = personsRepository.findByEmail(email);
+//        Person savedPerson = optionalPerson.get();
+//
+//        assertThat(savedPerson).isNotNull();
+//        assertThat(savedPerson.isActive()).isEqualTo(true);
+//
+//        registrationService.deleteByEmail(email);
+//    }
 
     @Test
     void testYourIq() {

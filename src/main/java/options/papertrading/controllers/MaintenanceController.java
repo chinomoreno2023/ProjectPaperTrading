@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MaintenanceController {
 
     @GetMapping
-    public String maintenancePage() {
-        return "maintenance/page";
+    public String showMaintenancePage() {
+        return "maintenance/maintenance";
     }
 }

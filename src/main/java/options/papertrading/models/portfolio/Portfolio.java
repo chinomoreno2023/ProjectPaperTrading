@@ -18,16 +18,16 @@ public class Portfolio {
     @Column(name = "volume")
     private int volume;
 
-    @Column(name = "trade_price", updatable = false)
+    @Column(name = "trade_price")
     private double tradePrice;
 
-    @Column(name = "volatility_when_was_trade", updatable = false)
+    @Column(name = "volatility_when_was_trade")
     private double volatilityWhenWasTrade;
 
     @Column(name = "variat_margin")
     private double variatMargin;
 
-    @Column(name = "collateral_when_was_trade", updatable = false)
+    @Column(name = "collateral_when_was_trade")
     private double collateralWhenWasTrade;
 
     @ManyToOne

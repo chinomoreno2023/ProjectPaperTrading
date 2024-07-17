@@ -17,7 +17,7 @@ public class VolumeValidator implements Validator {
     public void validate(Object target, Errors errors) {
         OptionDto optionDto = (OptionDto) target;
         if (optionDto.getVolume() <= 0) {
-            errors.rejectValue("volume", "", "Enter correct volume");
+            errors.rejectValue("volume", "", "Объём не может быть равен нулю");
         }
     }
 }

@@ -1,43 +1,52 @@
 package options.papertrading.services;
 
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import options.papertrading.facade.interfaces.IAuthFacade;
 import options.papertrading.models.person.Person;
 import options.papertrading.repositories.PersonsRepository;
-import options.papertrading.util.TestYourIq;
+import options.papertrading.util.converters.TextConverter;
 import options.papertrading.util.mail.SmtpMailSender;
+import options.papertrading.util.validators.PasswordValidatorService;
 import options.papertrading.util.validators.PersonValidator;
 import options.papertrading.util.validators.TestIqValidator;
-import org.springframework.data.jpa.repository.Modifying;
+import options.papertrading.util.validators.TestYourIq;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.Random;
 import java.util.UUID;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RegistrationService implements IAuthFacade {
     private final PersonsRepository personsRepository;
     private final PasswordEncoder passwordEncoder;
     private final SmtpMailSender smtpMailSender;
     private final TestIqValidator testIqValidator;
     private final PersonValidator personValidator;
+    private final TextConverter textConverter;
+    private final PasswordValidatorService passwordValidatorService;
 
-    @Override
+    @Value("${pathToMailText}")
+    private String pathToMailText;
+
     public void validate(@NonNull Person person, @NonNull Errors errors) {
         personValidator.validate(person, errors);
     }
 
+    public boolean validate(String password) {
+        return passwordValidatorService.isPasswordStrong(password);
+    }
+
     @Transactional
-    @Modifying
     public void register(@NonNull Person person) {
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         person.setRole("ROLE_USER");
@@ -46,33 +55,38 @@ public class RegistrationService implements IAuthFacade {
         person.setActivationCode(UUID.randomUUID().toString());
         log.info("New person: {}", person);
         personsRepository.save(person);
-        String message = String.format(
-                "Hi, %s!<br>Welcome to the OptionsPaperTrading learning project! Please confirm your mail: " +
-                        "<a href='http://localhost:8080/auth/activate/%s'>Confirm</a>",
-                person.getUsername(), person.getActivationCode());
+
+        String message;
+        try {
+            message = String.format(textConverter.readMailTextFromFile(pathToMailText),
+                                    person.getUsername(),
+                                    person.getActivationCode());
+        }
+        catch (IOException exception) {
+            throw new RuntimeException("Ошибка при обращении к файлу с текстом письма: " + exception.getMessage());
+        }
+
         try {
             smtpMailSender.sendHtml(person.getEmail(), "Activation code", message);
         }
         catch (MessagingException exception) {
-            log.info("Error: {}", exception.getMessage());
-            exception.printStackTrace();
+            throw new RuntimeException("Произошла ошибка отправки письма: " + exception.getMessage());
         }
     }
 
     @Transactional
-    @Modifying
     public boolean activatePerson(@NonNull String code) {
         Person person = personsRepository.findByActivationCode(code);
         if (person == null) {
             return false;
         }
+
         person.setActive(true);
-        person.setActivationCode(null);
         personsRepository.save(person);
         return true;
     }
 
-    public void testYourIqValidate(@NonNull TestYourIq testYourIq, @NonNull BindingResult bindingResult) {
+    public void testYourIqValidate(TestYourIq testYourIq, BindingResult bindingResult) {
         testIqValidator.validate(testYourIq, bindingResult);
     }
 
@@ -80,12 +94,7 @@ public class RegistrationService implements IAuthFacade {
         Random random = new Random();
         int number1 = random.nextInt(100) + 20;
         int number2 = number1 + random.nextInt(100);
+        log.info("{} + {} = {}", number1, number2, number1 + number2);
         return new TestYourIq(number1, number2, number2 * 100 / number1);
-    }
-
-    @Transactional
-    @Modifying
-    public void deleteByEmail(String email) {
-        personsRepository.deleteByEmail(email);
     }
 }

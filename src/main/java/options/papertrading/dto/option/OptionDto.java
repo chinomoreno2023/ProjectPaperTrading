@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class OptionDto {
+    private String id;
     private int strike;
     private String type;
     private double price;
@@ -13,4 +14,5 @@ public class OptionDto {
     private double buyCollateral;
     private double writeCollateral;
     private int buyOrWrite;
+    private double stepPrice;
 }

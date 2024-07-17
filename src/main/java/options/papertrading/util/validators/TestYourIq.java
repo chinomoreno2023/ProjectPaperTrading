@@ -1,8 +1,7 @@
-package options.papertrading.util;
+package options.papertrading.util.validators;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor

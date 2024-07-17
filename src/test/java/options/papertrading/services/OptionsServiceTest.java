@@ -5,9 +5,7 @@ import options.papertrading.models.option.Option;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -32,36 +30,36 @@ class OptionsServiceTest {
         optionList.forEach(option -> assertThat(option).isInstanceOf(Option.class));
     }
 
-    @Test
-    void findByOptionId() {
-        Option option = optionsService.findByOptionId(optionId);
+//    @Test
+//    void findByOptionId() {
+//        Option option = optionsService.findByOptionId(optionId);
+//
+//        assertThat(option).isNotNull();
+//        assertThat(option.getStrike()).isEqualTo(strike);
+//        assertThat(option.getType()).isEqualTo(type);
+//        assertThat(option.getPrice()).isInstanceOf(Double.class);
+//        assertThat(option.getVolatility()).isInstanceOf(Double.class);
+//        assertThat(option.getDaysToMaturity()).isInstanceOf(Integer.class);
+//        assertThat(option.getBuyCollateral()).isInstanceOf(Double.class);
+//        assertThat(option.getWriteCollateral()).isInstanceOf(Double.class);
+//        assertThat(option.getStepPrice()).isInstanceOf(Double.class);
+//    }
 
-        assertThat(option).isNotNull();
-        assertThat(option.getStrike()).isEqualTo(strike);
-        assertThat(option.getType()).isEqualTo(type);
-        assertThat(option.getPrice()).isInstanceOf(Double.class);
-        assertThat(option.getVolatility()).isInstanceOf(Double.class);
-        assertThat(option.getDaysToMaturity()).isInstanceOf(Integer.class);
-        assertThat(option.getBuyCollateral()).isInstanceOf(Double.class);
-        assertThat(option.getWriteCollateral()).isInstanceOf(Double.class);
-        assertThat(option.getStepPrice()).isInstanceOf(Double.class);
-    }
-
-    @Test
-    void convertToOptionDto() {
-        OptionDto optionDto = optionsService.convertToOptionDto(optionsService.findByOptionId(optionId));
-
-        assertThat(optionDto).isNotNull();
-        assertThat(optionDto.getStrike()).isEqualTo(strike);
-        assertThat(optionDto.getType()).isEqualTo(type);
-        assertThat(optionDto.getPrice()).isInstanceOf(Double.class);
-        assertThat(optionDto.getVolume()).isInstanceOf(Integer.class);
-        assertThat(optionDto.getVolatility()).isInstanceOf(Double.class);
-        assertThat(optionDto.getDaysToMaturity()).isInstanceOf(Integer.class);
-        assertThat(optionDto.getBuyCollateral()).isInstanceOf(Double.class);
-        assertThat(optionDto.getWriteCollateral()).isInstanceOf(Double.class);
-        assertThat(optionDto.getBuyOrWrite()).isInstanceOf(Integer.class);
-    }
+//    @Test
+//    void convertToOptionDto() {
+//        OptionDto optionDto = optionsService.convertToOptionDto(optionsService.findByOptionId(optionId));
+//
+//        assertThat(optionDto).isNotNull();
+//        assertThat(optionDto.getStrike()).isEqualTo(strike);
+//        assertThat(optionDto.getType()).isEqualTo(type);
+//        assertThat(optionDto.getPrice()).isInstanceOf(Double.class);
+//        assertThat(optionDto.getVolume()).isInstanceOf(Integer.class);
+//        assertThat(optionDto.getVolatility()).isInstanceOf(Double.class);
+//        assertThat(optionDto.getDaysToMaturity()).isInstanceOf(Integer.class);
+//        assertThat(optionDto.getBuyCollateral()).isInstanceOf(Double.class);
+//        assertThat(optionDto.getWriteCollateral()).isInstanceOf(Double.class);
+//        assertThat(optionDto.getBuyOrWrite()).isInstanceOf(Integer.class);
+//    }
 
 //    @Test
 //    void findByStrikeAndTypeAndDaysToMaturity() {

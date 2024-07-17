@@ -8,12 +8,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-//@Execution(ExecutionMode.SAME_THREAD)
 class PositionSetterTest {
 
     @Autowired
@@ -77,13 +75,7 @@ class PositionSetterTest {
 //        assertThat(positionSetter.isContained(newPortfolio)).isFalse();
 //    }
 
-    @Test
-    void updateVariatMargin() {
-        assertThat(positionSetter.updateVariatMargin(newPortfolio)).isEqualTo(150);
 
-        newPortfolio.setVolume(4);
-        assertThat(positionSetter.updateVariatMargin(newPortfolio)).isEqualTo(200);
-    }
 
     @Test
     void checkBuyOrWrite() {

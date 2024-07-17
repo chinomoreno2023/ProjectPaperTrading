@@ -2,9 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Confirmation error</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Неверный код | Options Paper Trading</title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333; /* серый асфальтовый фон */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #eee; /* цвет текста */
+            height: 100vh;
+            text-align: center; /* Центрирование текста */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 285px;
+        }
+
+        .typing-animation {
+            animation-name: fade-in;
+            animation-duration: 0.3s;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
 </head>
+
 <body>
-Wrong code
+<div class="container">
+    <div class="typing-animation">Код неверный, корректная ссылка у вас в почте.</div>
+</div>
+
+<script>
+    // JavaScript code for redirect after 5 seconds
+    setTimeout(function() {
+        window.location.href = '/auth/login';
+    }, 5000);
+</script>
+
 </body>
 </html>

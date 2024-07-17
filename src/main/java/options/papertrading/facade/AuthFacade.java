@@ -3,7 +3,7 @@ package options.papertrading.facade;
 import lombok.AllArgsConstructor;
 import options.papertrading.facade.interfaces.IAuthFacade;
 import options.papertrading.models.person.Person;
-import options.papertrading.util.TestYourIq;
+import options.papertrading.util.validators.TestYourIq;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -15,6 +15,10 @@ public class AuthFacade {
 
     public void validate(Person person, Errors errors) {
         registrationService.validate(person, errors);
+    }
+
+    public boolean validate(String password) {
+        return registrationService.validate(password);
     }
 
     public void register(Person person) {

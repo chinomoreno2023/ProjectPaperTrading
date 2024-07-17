@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добро пожаловать в OptionsPaperTrading</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #333; margin: 0; padding: 0; display: flex; justify-content: center;">
+<div class="container" style="max-width: 300px; margin: 20px; padding: 20px; background-color: #333; border-radius: 8px; box-shadow: 0 0 10px rgba(253, 72, 227, 0.26);">
+    <h2 style="color: #eee; text-align: center;">Добро пожаловать в OptionsPaperTrading!</h2>
+    <p style="color: #eee; font-size: 14px;">Здравствуйте, %s!</p>
+    <p style="color: #eee; font-size: 14px;">Спасибо за регистрацию в нашем учебном проекте. Для активации вашей учетной записи, пожалуйста, нажмите на кнопку ниже:</p>
+    <p style="text-align: center;"><a href="http://options-paper-trading.ru/auth/activate/%s" class="button" style="display: inline-block; padding: 10px 20px; background-color: #f84ed3; color: #fff; text-decoration: none; border-radius: 5px;">Подтвердить Email</a></p>
+    <p style="color: #eee; font-size: 14px;">Если вы не регистрировались на OptionsPaperTrading, просто проигнорируйте это письмо.</p>
+    <p style="color: #eee; font-size: 14px;">С наилучшими пожеланиями,<br>Команда Options Paper Trading</p>
+</div>
+</body>
+</html>

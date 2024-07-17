@@ -1,9 +1,9 @@
 package options.papertrading.models.person;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import options.papertrading.models.journal.Journal;
 import options.papertrading.models.portfolio.Portfolio;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -21,19 +21,16 @@ public class Person {
     private long id;
 
     @Column(name = "username")
-    @NotEmpty(message = "Имя не может быть пустым")
-    @Size(min = 3, max = 30, message = "Name should be between 3 and 30 characters")
+    @Size(min = 3, max = 30, message = "Имя должно быть от 3 до 30 символов")
     private String username;
 
-    @NotEmpty
-    @Size(min = 3, message = "password should be longer than 2")
     @Column(name = "password")
     private String password;
 
     @Column(name = "email")
-    @NotEmpty(message = "Email should not be empty")
-    @Email(message = "Email should be valid")
-    @Size(min = 3, max = 50, message = "Name should be between 3 and 50 characters")
+    @NotEmpty(message = "Вы забыли ввести почту")
+    @Email(message = "Вы ввели некорректную почту")
+    @Size(max = 50, message = "Длина почты не должна превышать 30 символов")
     private String email;
 
     @Column(name = "role")
@@ -46,9 +43,11 @@ public class Person {
     private double openLimit;
 
     @OneToMany(mappedBy = "owner")
+    @EqualsAndHashCode.Exclude
     private List<Portfolio> optionsInPortfolio;
 
     @OneToMany(mappedBy = "owner")
+    @EqualsAndHashCode.Exclude
     private List<Journal> journal;
 
     @Column(name = "activation_code")

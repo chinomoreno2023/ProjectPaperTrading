@@ -4,44 +4,49 @@ import lombok.AllArgsConstructor;
 import options.papertrading.services.PersonDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @AllArgsConstructor
+@Profile("!maintenance")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final PersonDetailsService personDetailsService;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable().authorizeRequests()
-                    .antMatchers("/auth/*", "/auth/**", "/error").permitAll()
-                    .antMatchers("/persons").hasAnyRole("ADMIN")
-                    .anyRequest().authenticated()
+        httpSecurity
+                .addFilterBefore(new RedirectUserFilter(), UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers("/auth/**", "/error", "/logo.png", "/favicon.png").permitAll()
+                .antMatchers("/persons").hasAnyRole("ADMIN")
+                .anyRequest().authenticated()
+                    .and()
+                    .formLogin()
+                    .usernameParameter("email")
+                    .loginPage("/auth/login")
+                    .defaultSuccessUrl("/portfolio", true)
                         .and()
-                        .formLogin()
-                        .usernameParameter("email")
-                        .loginPage("/auth/login")
-//                        .loginProcessingUrl("/process_login")
-                        .defaultSuccessUrl("/portfolio", true)
-                        .failureUrl("/auth/login?error")
+                        .logout()
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
                             .and()
-                            .logout()
-                            .logoutUrl("/logout")
-                            .logoutSuccessUrl("/auth/login");
+                            .csrf();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(personDetailsService)
-            .passwordEncoder(getPasswordEncoder());
+                .passwordEncoder(getPasswordEncoder());
     }
 
     @Bean

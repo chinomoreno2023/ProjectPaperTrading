@@ -26,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new RedirectUserFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/auth/**", "/error", "/logo.png", "/favicon.png", "/trick").permitAll()
+                .antMatchers("/auth/**", "/error", "/logo.png", "/favicon.png").permitAll()
                 .antMatchers("/persons").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
                     .and()

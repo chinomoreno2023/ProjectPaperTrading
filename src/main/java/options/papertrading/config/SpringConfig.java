@@ -30,4 +30,3 @@ public class SpringConfig {
         return retryTemplate;
     }
 }
-

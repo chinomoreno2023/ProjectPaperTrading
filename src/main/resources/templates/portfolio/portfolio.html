@@ -244,6 +244,64 @@
             background-color: #eee;
             color: #f84ed3;
         }
+
+        iframe {
+            width: 100%;
+            height: 2000px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        .iframe-container {
+            width: 50%;
+            max-height: 0;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            visibility: hidden;
+        }
+
+        @media (max-width: 1080px) {
+            .iframe-container {
+                width: 100%;
+                height: 580px;
+            }
+        }
+
+        .iframe-loaded {
+            box-shadow: 0 0 20px rgba(253, 72, 227, 0.5);
+            visibility: visible;
+        }
+
+        .styled-button.loading {
+            position: relative;
+            pointer-events: none; /* Отключаем возможность клика на кнопку во время загрузки */
+        }
+
+        .styled-button.loading::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            margin-top: -8px;
+            margin-left: -8px;
+            border: 2px solid #eee;
+            border-top-color: #f84ed3;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -359,6 +417,15 @@
             <td id="currentNetPositionCell" class="trade-price" th:text="${owner.currentNetPosition}"></td>
         </tr>
     </table>
+
+    <div>
+        <button class="styled-button" onclick="showCalculator()">Показать опционный калькулятор</button>
+    </div>
+
+    <div class="iframe-container">
+        <iframe src="https://www.moex.com/msn/ru-options-calc" frameborder="0"></iframe>
+    </div>
+
 </div>
 
 <div id="myModal" class="modal">
@@ -381,6 +448,26 @@
         <div id="errorMessage" class="error-message" style="color: red; text-align: center"></div>
     </div>
 </div>
+
+<script>
+    function showCalculator() {
+        var iframe = document.querySelector("iframe");
+        var container = iframe.parentElement;
+        var button = document.querySelector(".styled-button[onclick='showCalculator()']");
+
+        button.classList.add("loading"); // Добавляем класс loading к кнопке
+
+        iframe.onload = function() {
+            container.classList.add("iframe-loaded");
+            container.style.maxHeight = "1330px"; // Устанавливаем высоту после загрузки
+            button.classList.remove("loading"); // Убираем класс loading после загрузки
+        };
+
+        container.style.visibility = "visible";
+        container.style.maxHeight = "0"; // Устанавливаем изначальную высоту в 0 для анимации
+        iframe.src = iframe.src; // Перезагружаем iframe для инициализации onload
+    }
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

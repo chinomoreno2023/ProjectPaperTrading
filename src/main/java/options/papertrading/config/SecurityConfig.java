@@ -41,7 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                             .and()
-                            .csrf();
+                            .csrf()
+                                .and()
+                                .headers()
+                                .frameOptions().deny() // Запрещает отображение в iframe
+                                .contentSecurityPolicy("frame-ancestors 'none';");
     }
 
     @Override

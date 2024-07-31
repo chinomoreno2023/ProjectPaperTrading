@@ -105,6 +105,10 @@ class PositionSetterTest {
         assertThat(positionSetter.checkDirectOrReverse(optionDto, oldPortfolio)).isFalse();
     }
 
+    @Test
+    void doEveningClearing() {
+    }
+
 //    @Test
 //    void isThereEnoughMoneyForReverseBuy() {
 //        assertThat(positionSetter.isThereEnoughMoneyForReverseBuyForTest(oldPortfolio, newPortfolio)).isTrue();

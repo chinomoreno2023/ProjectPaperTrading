@@ -13,6 +13,7 @@ import options.papertrading.repositories.JournalRepository;
 import options.papertrading.util.mappers.JournalMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -49,9 +50,9 @@ public class JournalService implements IJournalFacade {
 
     public List<JournalDto> convertJournalListToJournalDtoList(@NonNull List<Journal> journalList) {
         List<JournalDto> journalDtoList = journalList.stream()
-                                                     .sorted(Comparator.comparing(Journal::getDateAndTime).reversed())
-                                                     .map(this::convertJournalToJournalDto)
-                                                     .collect(Collectors.toList());
+                .sorted(Comparator.comparing(Journal::getDateAndTime).reversed())
+                .map(this::convertJournalToJournalDto)
+                .collect(Collectors.toList());
         log.info("Converting journal list '{}' to journalDto list. Result: {} ", journalList, journalDtoList);
         return journalDtoList;
     }

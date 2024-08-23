@@ -122,11 +122,11 @@ public class PortfoliosService implements IPortfolioFacade {
         LocalTime currentTimeInMoscow = nowInMoscow.toLocalTime();
         DayOfWeek currentDayOfWeek = nowInMoscow.getDayOfWeek();
 
-        LocalTime marketOpenTime = LocalTime.of(6, 50);
-        LocalTime marketCloseTime = LocalTime.of(23, 50);
+        LocalTime ExchangeOpenTime = LocalTime.of(6, 50);
+        LocalTime ExchangeCloseTime = LocalTime.of(23, 50);
 
         if (currentDayOfWeek == DayOfWeek.SATURDAY || currentDayOfWeek == DayOfWeek.SUNDAY ||
-                currentTimeInMoscow.isBefore(marketOpenTime) || currentTimeInMoscow.isAfter(marketCloseTime)) {
+                currentTimeInMoscow.isBefore(ExchangeOpenTime) || currentTimeInMoscow.isAfter(ExchangeCloseTime)) {
             throw new IllegalArgumentException("Биржа работает по будням с 6:50 до 23:50 по московскому времени");
         }
 

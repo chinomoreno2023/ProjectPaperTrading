@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 @Slf4j
 @Component
 public class SmtpMailSender {
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
     private String username;

@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.util.Collections;
 
@@ -15,21 +16,23 @@ import java.util.Collections;
 @AllArgsConstructor
 public class AuthProviderImpl implements AuthenticationProvider {
     private final PersonDetailsService personDetailsService;
+    private final PasswordEncoder passwordEncoder; // Внедрение PasswordEncoder
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         UserDetails personDetails = personDetailsService.loadUserByUsername(username);
-        String password = authentication.getCredentials().toString();
+        String rawPassword = authentication.getCredentials().toString();
 
-        if (!password.equals(personDetails.getPassword()))
+        if (!passwordEncoder.matches(rawPassword, personDetails.getPassword())) {
             throw new BadCredentialsException("Password incorrect");
+        }
 
-        return new UsernamePasswordAuthenticationToken(personDetails, password, Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(personDetails, rawPassword, Collections.emptyList());
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return true;
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

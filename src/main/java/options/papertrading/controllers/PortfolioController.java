@@ -82,10 +82,6 @@ public class PortfolioController {
         }
     }
 
-//    @GetMapping("/testPage")
-//    public String openTestPage() {
-//        return "testPage";
-//    }
     @GetMapping("/testPage")
     public String openTestPage() {
         return "testPage";

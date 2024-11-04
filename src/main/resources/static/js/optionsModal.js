@@ -102,15 +102,22 @@ function confirmOperation() {
     formData.append("volume", volume);
     formData.append("buyOrWrite", buyOrWrite);
 
-    // Отправляем данные на сервер
-    fetch("/portfolio/confirmation", {
+    // Создаем запрос и таймер для 3-секундного ожидания
+    const fetchRequest = fetch("/portfolio/confirmation", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'X-CSRF-TOKEN': csrfToken // добавляем CSRF токен в заголовок
         },
         body: formData.toString()
-    })
+    });
+
+    const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Время ожидания больше обычного")), 3000)
+    );
+
+    // Запускаем гонку между fetch и таймером
+    Promise.race([fetchRequest, timeout])
         .then(response => {
             if (response.ok) {
                 return response.text();
@@ -127,9 +134,15 @@ function confirmOperation() {
             window.location.href = "/portfolio";
         })
         .catch(error => {
-            // Отобразить сообщение об ошибке в модальном окне
-            var errorMessageElement = document.getElementById("errorMessage");
-            errorMessageElement.textContent = error.message;
+            if (error.message === "Время ожидания больше обычного") {
+                // Если время ожидания истекло
+                alert("Есть небольшая задержка с ответом. Ваша операция будет на 100% завершена, но немного позже, не повторяйте её. Все повторные действия с этим активом, кроме первого, будут отменены.");
+                // window.location.href = "/#";
+            } else {
+                // Обработать другие ошибки
+                var errorMessageElement = document.getElementById("errorMessage");
+                errorMessageElement.textContent = error.message;
+            }
         });
 }
 

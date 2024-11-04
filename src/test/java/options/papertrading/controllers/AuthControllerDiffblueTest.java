@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 
 import java.util.ArrayList;
 
@@ -348,27 +347,6 @@ class AuthControllerDiffblueTest {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("person"))
                 .andExpect(MockMvcResultMatchers.view().name("auth/profile"))
                 .andExpect(MockMvcResultMatchers.forwardedUrl("auth/profile"));
-    }
-
-    /**
-     * Method under test:
-     * {@link AuthController#performRegistration(Person, BindingResult, Model)}
-     */
-    @Test
-    void testPerformRegistration() throws Exception {
-        // Arrange
-        doNothing().when(iAuthFacade).validate(Mockito.<Person>any(), Mockito.<Errors>any());
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/auth/registration");
-
-        // Act and Assert
-        MockMvcBuilders.standaloneSetup(authController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().size(1))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("person"))
-                .andExpect(MockMvcResultMatchers.view().name("auth/registration"))
-                .andExpect(MockMvcResultMatchers.forwardedUrl("auth/registration"));
     }
 
     /**

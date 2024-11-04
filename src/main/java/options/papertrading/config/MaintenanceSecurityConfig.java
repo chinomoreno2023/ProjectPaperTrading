@@ -5,42 +5,49 @@ import options.papertrading.services.PersonDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
 @Profile("maintenance")
-public class MaintenanceSecurityConfig extends WebSecurityConfigurerAdapter {
+public class MaintenanceSecurityConfig {
     private final PersonDetailsService personDetailsService;
 
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests()
-                .antMatchers("/maintenance").permitAll() // Разрешаем доступ только к странице технических работ
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().disable() // Отключаем форму логина
-                .logout().disable() // Отключаем возможность выхода
-                .exceptionHandling()
-                .defaultAuthenticationEntryPointFor(
-                        (request, response, authException) -> response.sendRedirect("/maintenance"),
-                        (request) -> true); // Перенаправляем на страницу технических работ при любом запросе
-    }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/maintenance").permitAll() // Разрешаем доступ только к странице технических работ
+                        .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
+                )
+                .formLogin(formLogin -> formLogin
+                        .disable() // Отключаем форму логина
+                )
+                .logout(logout -> logout
+                        .disable() // Отключаем возможность выхода
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .defaultAuthenticationEntryPointFor(
+                                (request, response, authException) -> response.sendRedirect("/maintenance"),
+                                (request) -> true) // Перенаправляем на страницу технических работ при любом запросе
+                );
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(personDetailsService)
-                .passwordEncoder(getPasswordEncoder());
+        return http.build();
     }
 
     @Bean
-    public PasswordEncoder getPasswordEncoder() {
+    public AuthenticationManager authManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

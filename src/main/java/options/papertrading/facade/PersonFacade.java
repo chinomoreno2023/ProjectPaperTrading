@@ -1,11 +1,12 @@
 package options.papertrading.facade;
 
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import options.papertrading.dto.person.PersonDto;
 import options.papertrading.facade.interfaces.IPersonFacade;
 import options.papertrading.models.person.Person;
 import org.springframework.stereotype.Component;
-import javax.mail.MessagingException;
+
 import java.io.IOException;
 import java.util.List;
 

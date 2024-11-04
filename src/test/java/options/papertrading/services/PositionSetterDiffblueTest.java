@@ -1,5 +1,6 @@
 package options.papertrading.services;
 
+import jakarta.persistence.EntityManager;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.facade.interfaces.IAuthFacade;
 import options.papertrading.models.option.Option;
@@ -8,25 +9,23 @@ import options.papertrading.models.portfolio.Portfolio;
 import options.papertrading.repositories.PortfoliosRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
 
 @ContextConfiguration(classes = {PositionSetter.class})
 @ExtendWith(SpringExtension.class)
+@Execution(ExecutionMode.SAME_THREAD)
 class PositionSetterDiffblueTest {
     @MockBean
     private IAuthFacade iAuthFacade;

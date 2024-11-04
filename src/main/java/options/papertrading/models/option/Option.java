@@ -1,8 +1,8 @@
 package options.papertrading.models.option;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import options.papertrading.models.portfolio.Portfolio;
-import javax.persistence.*;
 import java.util.List;
 
 @Entity

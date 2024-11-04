@@ -1,5 +1,6 @@
 package options.papertrading.controllers.rest;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpServerErrorException;
-import javax.validation.Valid;
+
 import java.util.List;
 
 @Slf4j

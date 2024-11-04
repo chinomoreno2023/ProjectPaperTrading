@@ -1,5 +1,7 @@
 package options.papertrading.controllers;
 
+import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import javax.mail.MessagingException;
-import javax.validation.Valid;
+
 import java.io.IOException;
 
 @Slf4j

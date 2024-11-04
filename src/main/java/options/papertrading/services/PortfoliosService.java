@@ -1,5 +1,9 @@
 package options.papertrading.services;
 
+import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityManager;
+import kafka.producer.model.dto.TradeCreatedEventDto;
+import kafka.producer.service.ProducerService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +25,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import javax.mail.MessagingException;
-import javax.persistence.EntityManager;
+
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -30,6 +33,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,6 +50,7 @@ public class PortfoliosService implements IPortfolioFacade {
     private final JournalRepository journalRepository;
     private final SmtpMailSender smtpMailSender;
     private final TextConverter textConverter;
+    private final ProducerService producerService;
 
     @Value("${pathToMarginCallMail}")
     private String pathToMarginCallMail;
@@ -111,6 +116,12 @@ public class PortfoliosService implements IPortfolioFacade {
     @Transactional
     public void addPortfolio(String id, int volume, int buyOrWrite) {
         addPortfolio(optionsService.createOptionDtoFromView(id, volume, buyOrWrite));
+        try {
+            producerService.createEvent(new TradeCreatedEventDto(id, volume, buyOrWrite));
+        }
+        catch (InterruptedException | ExecutionException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 
     @Transactional

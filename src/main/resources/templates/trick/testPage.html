@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Столбцы значений | Options Paper Trading</title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <style>
+        /* Стили из вашей текущей страницы */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333; /* серый асфальтовый фон */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Центрируем по вертикали */
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around; /* Располагаем столбцы по горизонтали */
+            align-items: flex-start; /* Выравниваем столбцы по верху */
+            width: 90%; /* Изменено для адаптации к ширине экрана */
+        }
+
+        .column {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(253, 72, 227, 0.5);
+            padding: 10px;
+            margin: 0 10px; /* Отступы между столбцами */
+            cursor: pointer; /* Курсор указывает на кликабельность */
+            transition: background-color 0.3s;
+            flex: 1; /* Занимает равную ширину */
+            text-align: center; /* Выравнивание текста по центру */
+            max-width: 70px;
+        }
+
+        .column:hover {
+            background-color: #f0f0f0; /* Цвет при наведении */
+        }
+
+        h2 {
+            color: #eee; /* Цвет заголовков */
+            padding: 8px 12px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(253, 72, 227, 0.5);
+            background-color: rgba(32, 32, 32, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="column" onclick="handleColumnClick(1)">
+        <div th:each="value : ${array1}">
+            <div th:text="${value}"></div>
+        </div>
+    </div>
+    <div class="column" onclick="handleColumnClick(2)">
+        <div th:each="value : ${array2}">
+            <div th:text="${value}"></div>
+        </div>
+    </div>
+    <div class="column" onclick="handleColumnClick(3)">
+        <div th:each="value : ${array3}">
+            <div th:text="${value}"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function handleColumnClick(columnNumber) {
+        alert("Вы кликнули на столбец " + columnNumber);
+        // Здесь вы можете добавить код для обработки клика по столбцу
+    }
+</script>
+
+</body>
+</html>

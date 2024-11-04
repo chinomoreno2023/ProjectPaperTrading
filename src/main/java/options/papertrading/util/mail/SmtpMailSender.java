@@ -1,5 +1,7 @@
 package options.papertrading.util.mail;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 
 @Slf4j
 @Component
@@ -27,6 +27,7 @@ public class SmtpMailSender {
                          @NonNull String subject,
                          @NonNull String message) throws MessagingException {
         log.info("Sending '{}' message with '{}' subject to '{}' email", message, subject, emailTo);
+
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         helper.setFrom(username);

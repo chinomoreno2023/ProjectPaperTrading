@@ -1,5 +1,6 @@
 package options.papertrading.services;
 
+import jakarta.mail.MessagingException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import javax.mail.MessagingException;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;

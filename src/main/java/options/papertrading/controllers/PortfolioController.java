@@ -1,6 +1,6 @@
 package options.papertrading.controllers;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.dto.portfolio.PortfolioDto;
@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequestMapping("/portfolio")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PortfolioController {
     private final PortfolioFacade portfolioFacade;
     private final OptionFacade optionFacade;
@@ -53,9 +53,10 @@ public class PortfolioController {
     }
 
     @PostMapping("/confirmation")
-    public ResponseEntity<String> addPortfolio(@RequestParam("id") String id,
+    public ResponseEntity<Object> addPortfolio(@RequestParam("id") String id,
                                                @RequestParam("volume") int volume,
                                                @RequestParam("buyOrWrite") int buyOrWrite) {
+
         log.info("Request to add portfolio. Id: {}, volume: {}, buyOrWrite: {}", id, volume, buyOrWrite);
         if (volume <= 0) {
             return ResponseEntity.badRequest().body("Объём не может быть равен нулю");

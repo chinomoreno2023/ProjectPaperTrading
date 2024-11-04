@@ -1,8 +1,9 @@
 package options.papertrading.facade.interfaces;
 
+import jakarta.mail.MessagingException;
 import options.papertrading.dto.person.PersonDto;
 import options.papertrading.models.person.Person;
-import javax.mail.MessagingException;
+
 import java.io.IOException;
 import java.util.List;
 

@@ -4,12 +4,9 @@ on:
   push:
     branches:
       - master
-      - kafka
-      - 'feature/*'  # Отслеживать push в ветках feature/*
   pull_request:
     branches:
       - master
-      - kafka
 
 jobs:
   build:

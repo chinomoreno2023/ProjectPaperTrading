@@ -25,9 +25,8 @@ public class ProducerServiceImpl implements ProducerService {
         String eventId = UUID.randomUUID().toString();
 
         TradeCreatedEvent tradeCreatedEvent = new TradeCreatedEvent(eventId,
-                tradeCreatedEventDto.getId(),
-                tradeCreatedEventDto.getVolume(),
-                tradeCreatedEventDto.getBuyOrWrite());
+                                                                    tradeCreatedEventDto.getPortfolioForDelete(),
+                                                                    tradeCreatedEventDto.getPortfolioForSave());
 
         ProducerRecord<String, TradeCreatedEvent> record = new ProducerRecord<>("trade-created-events-topic",
                 eventId,

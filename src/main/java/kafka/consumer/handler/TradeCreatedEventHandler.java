@@ -7,6 +7,7 @@ import kafka.consumer.persistence.repository.ProcessedEventRepository;
 import kafka.producer.model.TradeCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import options.papertrading.repositories.PortfoliosRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -24,6 +25,7 @@ import org.springframework.web.client.ResourceAccessException;
 @RequiredArgsConstructor
 public class TradeCreatedEventHandler {
     private final ProcessedEventRepository processedEventRepository;
+    private final PortfoliosRepository portfoliosRepository;
 
     @KafkaHandler
     @Transactional(transactionManager = "transactionManager")
@@ -31,7 +33,7 @@ public class TradeCreatedEventHandler {
                        @Header("messageId") String messageId,
                        @Header(KafkaHeaders.RECEIVED_KEY) String messageKey) {
 
-        log.info("Received event: {}", tradeCreatedEvent.getId());
+        log.info("Received event: {}", tradeCreatedEvent.getEventId());
         ProcessedEventEntity processedEventEntity = processedEventRepository.findByMessageId(messageId);
         if (processedEventEntity != null) {
             log.info("Duplicate message id: {}", messageId);
@@ -39,6 +41,12 @@ public class TradeCreatedEventHandler {
         }
 
         try {
+            if (tradeCreatedEvent.getPortfolioForDelete() != null) {
+                portfoliosRepository.delete(tradeCreatedEvent.getPortfolioForDelete());
+            }
+            if (tradeCreatedEvent.getPortfolioForSave() != null) {
+                portfoliosRepository.save(tradeCreatedEvent.getPortfolioForSave());
+            }
 
         }
         catch (ResourceAccessException exception) {

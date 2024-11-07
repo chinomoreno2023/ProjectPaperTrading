@@ -52,27 +52,27 @@
         }
 
         th, td {
-            padding: 5px;
-            font-size: 12px;
+            padding: 5px; /* Уменьшаем отступы внутри ячеек */
+            font-size: 12px; /* Уменьшаем размер шрифта */
         }
 
         th {
-            background-color: #ccc;
+            background-color: #ccc; /* платиновый цвет заголовков */
             font-weight: bold;
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: #f2f2f2; /* серый фон для четных строк */
         }
 
         tr:hover {
-            background-color: #ddd;
+            background-color: #ddd; /* изменение цвета строки при наведении */
         }
 
         .vertical-table {
-            display: block;
+            display: block; /* Добавлено для поддержки горизонтальной прокрутки */
             width: 100%;
-            overflow-x: auto;
+            overflow-x: auto; /* Добавлено для горизонтальной прокрутки */
         }
 
         .vertical-table th,
@@ -85,13 +85,13 @@
             position: sticky;
             left: 0;
             text-align: right;
-            background-color: #ccc;
-            z-index: 1;
+            background-color: #ccc; /* Цвет фона закрепленного столбца */
+            z-index: 1; /* Устанавливаем z-index выше, чем у остальных ячеек */
             width: 50px;
         }
 
         h2 {
-            color: #eee;
+            color: #eee; /* Цвет заголовков */
             padding: 8px 12px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(253, 72, 227, 0.5);
@@ -99,8 +99,8 @@
         }
 
         .styled-button {
-            background-color: #f84ed3;
-            color: #eee;
+            background-color: #f84ed3; /* платиновый цвет кнопок */
+            color: #eee; /* цвет текста кнопок */
             font-weight: bold;
             border-radius: 3px;
             border: none;
@@ -112,12 +112,12 @@
         }
 
         .styled-button:hover {
-            background-color: #eee;
-            color: #f84ed3;
+            background-color: #eee; /* изменение цвета кнопок при наведении */
+            color: #f84ed3; /* изменение цвета кнопок при наведении */
         }
 
         .modal {
-            display: none;
+            display: none; /* Скрываем модальное окно по умолчанию */
             position: fixed;
             z-index: 2;
             left: 0;
@@ -125,7 +125,7 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.4);
+            background-color: rgba(0,0,0,0.4); /* Черный полупрозрачный фон */
             padding-top: 50px;
             animation-name: fade-in;
             animation-duration: 0.1s;
@@ -135,19 +135,19 @@
             position: relative;
             background-color: white;
             border-radius: 8px;
-            margin: auto;
+            margin: auto; /* Центрируем по вертикали и горизонтали */
             padding: 20px;
             border: 1px solid #888;
-            max-width: 285px;
+            max-width: 285px; /* Максимальная ширина модального окна */
         }
 
         .close {
             color: #aaa;
-            position: absolute;
-            top: 5px;
-            right: 5px;
+            position: absolute; /* Добавлено для абсолютного позиционирования */
+            top: 5px; /* Расположение крестика от верхнего края */
+            right: 5px; /* Расположение крестика от правого края */
             font-weight: bold;
-            cursor: pointer;
+            cursor: pointer; /* Добавлено свойство cursor */
         }
 
         .close:hover,
@@ -182,14 +182,14 @@
 
         .modal-content form label {
             text-align: right;
-            width: 100px;
+            width: 100px; /* Устанавливаем минимальную ширину для меток */
             margin-right: 5px;
         }
 
         .menu-bar {
             display: flex;
             justify-content: space-between;
-            position: fixed;
+            position: fixed; /* Закрепляем меню */
             top: 0;
             right: 0;
             background-color: rgba(51, 51, 51, 0.2);
@@ -217,11 +217,11 @@
             display: none;
             flex-direction: column;
             background-color: #444;
-            width: 200px;
+            width: 200px; /* Ширина меню */
             position: absolute;
             top: 50px;
-            right: 0;
-            transform: translateX(0%);
+            right: 0; /* Исходная позиция справа */
+            transform: translateX(0%); /* Перемещаем меню влево */
             padding: 10px 0;
             animation-name: fade-in;
             animation-duration: 0.2s;
@@ -240,9 +240,9 @@
 
         .modal-content form button {
             border-radius: 4px;
-            width: auto;
-            margin: 5px auto 0;
-            padding: 5px 8px;
+            width: auto; /* Устанавливаем ширину кнопки по содержимому */
+            margin: 5px auto 0; /* Размещаем кнопку по центру сверху с отступом сверху */
+            padding: 5px 8px; /* Добавляем отступы вокруг текста кнопки */
         }
 
         .modal-content button[type="button"] {
@@ -290,7 +290,7 @@
 
         .styled-button.loading {
             position: relative;
-            pointer-events: none;
+            pointer-events: none; /* Отключаем возможность клика на кнопку во время загрузки */
         }
 
         .styled-button.loading::after {
@@ -469,17 +469,17 @@
         var container = iframe.parentElement;
         var button = document.querySelector(".styled-button[onclick='showCalculator()']");
 
-        button.classList.add("loading");
+        button.classList.add("loading"); // Добавляем класс loading к кнопке
 
         iframe.onload = function() {
             container.classList.add("iframe-loaded");
-            container.style.maxHeight = "1330px";
-            button.classList.remove("loading");
+            container.style.maxHeight = "1330px"; // Устанавливаем высоту после загрузки
+            button.classList.remove("loading"); // Убираем класс loading после загрузки
         };
 
         container.style.visibility = "visible";
-        container.style.maxHeight = "0";
-        iframe.src = iframe.src;
+        container.style.maxHeight = "0"; // Устанавливаем изначальную высоту в 0 для анимации
+        iframe.src = iframe.src; // Перезагружаем iframe для инициализации onload
     }
 </script>
 
@@ -509,7 +509,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-CSRF-TOKEN': csrfToken
+                        'X-CSRF-TOKEN': csrfToken // добавляем CSRF токен в заголовок
                     }
                 })
                     .then(response => {
@@ -520,11 +520,11 @@
                         }
                     })
                     .then(message => {
-                        alert(message);
-                        window.location.href = "/portfolio";
+                        alert(message); // Отображаем сообщение об успешном удалении журнала
+                        window.location.href = "/portfolio"; // Перенаправляем на страницу /portfolio
                     })
                     .catch(error => {
-                        alert(error.message);
+                        alert(error.message); // Отображаем сообщение об ошибке
                     });
             }
         });
@@ -533,12 +533,15 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Получаем ячейки по ID
         const openLimitCell = document.getElementById('openLimitCell');
         const currentNetPositionCell = document.getElementById('currentNetPositionCell');
 
+        // Получаем значения доступных средств и текущей позиции
         const openLimit = parseFloat(openLimitCell.textContent);
         const currentNetPosition = parseFloat(currentNetPositionCell.textContent);
 
+        // Проверяем условие и меняем цвет фона ячейки
         if (openLimit < currentNetPosition) {
             openLimitCell.style.backgroundColor = 'rgba(255,0,0,0.36)';
         }

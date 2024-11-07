@@ -141,7 +141,8 @@ public class PortfoliosService implements IPortfolioFacade {
 
         if (positionSetter.isContained(portfolio)) {
             addPortfolioIfItIsContained(optionDto);
-        } else {
+        }
+        else {
             addPortfolioIfItIsNotContained(optionDto);
         }
     }
@@ -477,7 +478,7 @@ public class PortfoliosService implements IPortfolioFacade {
     }
 
     @Scheduled(cron = "0 00 14 * * MON-FRI")
-    @Retryable(value = { Exception.class }, maxAttempts = 6, backoff = @Backoff(delay = 10000))
+    @Retryable(value = {Exception.class}, maxAttempts = 6, backoff = @Backoff(delay = 10000))
     @Transactional
     public void expirationCheck() {
         List<Portfolio> portfolios = portfoliosRepository.findAll();
@@ -526,10 +527,11 @@ public class PortfoliosService implements IPortfolioFacade {
         if (owner.getOpenLimit() < owner.getCurrentNetPosition() * 0.5) {
             int counterForJournals = 0;
             while (owner.getOpenLimit() <= owner.getCurrentNetPosition() * 0.5) {
-                Portfolio portfolioWithMinVariat = optionsInPortfolio.stream()
-                                                                     .filter(portfolio -> portfolio.getVolume() != 0)
-                                                                     .min(Comparator.comparingDouble(Portfolio::getVariatMargin))
-                                                                     .orElse(null);
+                Portfolio portfolioWithMinVariat = optionsInPortfolio
+                        .stream()
+                        .filter(portfolio -> portfolio.getVolume() != 0)
+                        .min(Comparator.comparingDouble(Portfolio::getVariatMargin))
+                        .orElse(null);
                 log.info("Portfolio with min variat margin: {}", portfolioWithMinVariat);
                 if (portfolioWithMinVariat == null) {
                     sendMarginCallMail(owner);

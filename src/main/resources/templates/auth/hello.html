@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Yandex.Metrika counter -->
     <script type="text/javascript" >
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
             m[i].l=1*new Date();
@@ -16,7 +15,6 @@
         });
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/97933484" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Капча | Options Paper Trading</title>
@@ -24,28 +22,28 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #333; /* серый асфальтовый фон */
-            color: #eee; /* белый цвет текста */
+            background-color: #333;
+            color: #eee;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
-            text-align: center; /* выравнивание текста по центру */
+            text-align: center;
             visibility: hidden;
         }
 
         .form-container {
             display: flex;
-            flex-direction: column; /* расположение элементов по вертикали */
-            align-items: flex-end; /* выравнивание элементов по левому краю */
+            flex-direction: column;
+            align-items: flex-end;
             z-index: 1;
         }
 
         form {
-            margin-top: 20px; /* отступ сверху */
+            margin-top: 20px;
             display: flex;
-            flex-direction: column; /* расположение элементов по вертикали */
-            align-items: flex-start; /* выравнивание элементов по левому краю */
+            flex-direction: column;
+            align-items: flex-start;
             max-width: 250px;
             width: 100%;
             border-radius: 8px;
@@ -55,7 +53,7 @@
         input[type="number"],
         input[type="submit"] {
             padding: 10px;
-            margin-top: 10px; /* отступ между элементами */
+            margin-top: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             transition: border-color 0.3s ease;
@@ -63,7 +61,7 @@
         }
 
         input[type="number"] {
-            width: calc(100% - 22px); /* Вычисляем ширину, оставляя место для границы и внутренних отступов */
+            width: calc(100% - 22px);
 
         }
 
@@ -74,7 +72,7 @@
 
         input[type="submit"] {
             background-color: #f84ed3;
-            color: #eee; /* цвет текста кнопок */
+            color: #eee;
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s ease;
@@ -82,20 +80,20 @@
 
         input[type="submit"]:hover {
             background-color: #eee;
-            color: #f84ed3;/* изменение цвета кнопок при наведении */
+            color: #f84ed3;
         }
 
         .typing-animation {
-            overflow: hidden; /* скрытие лишних символов */
-            white-space: nowrap; /* чтобы текст печатался в одну строку */
-            display: inline-block; /* чтобы анимация происходила внутри элемента */
-            animation: typing 0.4s steps(20) forwards; /* долгая анимация */
-            text-align: left; /* выравнивание текста слева */
+            overflow: hidden;
+            white-space: nowrap;
+            display: inline-block;
+            animation: typing 0.4s steps(20) forwards;
+            text-align: left;
         }
 
         @keyframes typing {
-            from { width: 0; } /* начальная ширина текста */
-            to { width: 100%; } /* конечная ширина текста */
+            from { width: 0; }
+            to { width: 100%; }
         }
 
         .image-container {
@@ -132,9 +130,8 @@
 </div>
 
 <script>
-    // JavaScript code to show elements after image is loaded
     document.getElementById('logo').onload = function() {
-        document.body.style.visibility = 'visible'; // Показать весь контент после загрузки изображения
+        document.body.style.visibility = 'visible';
         const forms = document.querySelectorAll(".container form");
         forms.forEach(form => form.classList.add("visible"));
     };
@@ -145,7 +142,7 @@
         var form = document.getElementById("testForm");
         form.addEventListener("submit", function (event) {
             var resultInput = document.getElementById("result");
-            if (!resultInput.value.trim()) { // Проверка на пустое значение или только пробелы
+            if (!resultInput.value.trim()) {
                 resultInput.value = "0";
             }
         });
@@ -154,7 +151,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("result").value = ""; // Очищаем поле result
+        document.getElementById("result").value = "";
     });
 </script>
 

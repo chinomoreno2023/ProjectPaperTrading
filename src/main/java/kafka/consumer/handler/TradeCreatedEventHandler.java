@@ -47,7 +47,6 @@ public class TradeCreatedEventHandler {
             if (tradeCreatedEvent.getPortfolioForSave() != null) {
                 portfoliosRepository.save(tradeCreatedEvent.getPortfolioForSave());
             }
-
         }
         catch (ResourceAccessException exception) {
             log.error(exception.getMessage());

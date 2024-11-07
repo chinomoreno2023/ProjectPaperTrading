@@ -6,13 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import options.papertrading.models.portfolio.Portfolio;
 
-import java.io.Serializable;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class TradeCreatedEvent implements Serializable {
+public class TradeCreatedEvent {
     private String eventId;
     private Portfolio portfolioForDelete;
     private Portfolio portfolioForSave;

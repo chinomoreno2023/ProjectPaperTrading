@@ -17,8 +17,7 @@
     <noscript><div><img src="https://mc.yandex.ru/watch/97933484" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Неверный код | Options Paper Trading</title>
-    <link rel="icon" href="/favicon.png" type="image/png">
+    <title>Успешная регистрация | Options Paper Trading</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,14 +51,15 @@
 
 <body>
 <div class="container">
-    <div class="typing-animation">Код неверный, корректная ссылка у вас в почте.</div>
+    <div class="typing-animation">Вы успешно зарегистрировались на платформе Options Paper Trading.
+        Перенаправляю на страницу авторизации.</div>
 </div>
 
 <script>
+    // JavaScript code for redirect after 3 seconds
     setTimeout(function() {
         window.location.href = '/auth/login';
     }, 5000);
 </script>
-
 </body>
 </html>

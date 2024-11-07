@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 
 @Slf4j
@@ -50,6 +49,7 @@ public class AuthController {
             model.addAttribute("emailError", "Произошла ошибка: " + exception.getMessage());
             return "auth/registration";
         }
+
         return "auth/confirmation";
     }
 

@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
             menuContent.style.display = 'none';
             document.removeEventListener('click', closeMenuOnClickOutside);
             document.removeEventListener('keydown', closeMenuOnEscape);
-        } else {
+        }
+        else {
             menuContent.style.display = 'flex';
             document.addEventListener('click', closeMenuOnClickOutside);
             document.addEventListener('keydown', closeMenuOnEscape);

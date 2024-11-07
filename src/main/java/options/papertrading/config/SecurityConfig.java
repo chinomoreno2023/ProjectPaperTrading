@@ -30,33 +30,22 @@ public class SecurityConfig {
                         authorizeRequests
                                 .requestMatchers("/auth/**", "/error", "/logo.png", "/favicon.png").permitAll()
                                 .requestMatchers("/persons").hasRole("ADMIN")
-                                .anyRequest().authenticated()
-                )
-                .formLogin(formLogin ->
-                        formLogin
-                                .usernameParameter("email")
-                                .loginPage("/auth/login")
-                                .defaultSuccessUrl("/portfolio", true)
-                                .permitAll()
-                )
-                .logout(logout ->
-                        logout
-                                .logoutUrl("/logout")
-                                .invalidateHttpSession(true)
-                                .deleteCookies("JSESSIONID")
-                                .permitAll()
-                )
-                .headers(headers ->
-                        headers
-                                .frameOptions(frameOptions -> frameOptions
-                                        .deny() // Настройка заголовка X-Frame-Options
-                                )
-                );
+                                .anyRequest().authenticated())
+
+                .formLogin(formLogin -> formLogin.usernameParameter("email")
+                                                 .loginPage("/auth/login")
+                                                 .defaultSuccessUrl("/portfolio", true)
+                                                 .permitAll())
+
+                .logout(logout -> logout.logoutUrl("/logout")
+                                        .invalidateHttpSession(true)
+                                        .deleteCookies("JSESSIONID")
+                                        .permitAll())
+
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.deny()));
 
         return httpSecurity.build();
     }
-
-
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -69,7 +58,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }

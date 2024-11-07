@@ -1,4 +1,4 @@
-package kafka.producer.config;
+package kafka.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import kafka.consumer.exception.NonRetryableException;
@@ -23,7 +23,6 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.util.backoff.FixedBackOff;
-
 import java.util.HashMap;
 import java.util.Map;
 

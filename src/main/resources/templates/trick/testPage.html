@@ -8,23 +8,22 @@
     <title>Столбцы значений | Options Paper Trading</title>
     <link rel="icon" href="/favicon.png" type="image/png">
     <style>
-        /* Стили из вашей текущей страницы */
         body {
             font-family: Arial, sans-serif;
-            background-color: #333; /* серый асфальтовый фон */
+            background-color: #333;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Центрируем по вертикали */
+            height: 100vh;
         }
 
         .container {
             display: flex;
-            justify-content: space-around; /* Располагаем столбцы по горизонтали */
-            align-items: flex-start; /* Выравниваем столбцы по верху */
-            width: 90%; /* Изменено для адаптации к ширине экрана */
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 90%;
         }
 
         .column {
@@ -32,20 +31,20 @@
             border-radius: 8px;
             box-shadow: 0 0 20px rgba(253, 72, 227, 0.5);
             padding: 10px;
-            margin: 0 10px; /* Отступы между столбцами */
-            cursor: pointer; /* Курсор указывает на кликабельность */
+            margin: 0 10px;
+            cursor: pointer;
             transition: background-color 0.3s;
-            flex: 1; /* Занимает равную ширину */
-            text-align: center; /* Выравнивание текста по центру */
+            flex: 1;
+            text-align: center;
             max-width: 70px;
         }
 
         .column:hover {
-            background-color: #f0f0f0; /* Цвет при наведении */
+            background-color: #f0f0f0;
         }
 
         h2 {
-            color: #eee; /* Цвет заголовков */
+            color: #eee;
             padding: 8px 12px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(253, 72, 227, 0.5);
@@ -76,7 +75,6 @@
 <script>
     function handleColumnClick(columnNumber) {
         alert("Вы кликнули на столбец " + columnNumber);
-        // Здесь вы можете добавить код для обработки клика по столбцу
     }
 </script>
 

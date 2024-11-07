@@ -21,8 +21,11 @@ public class PersonValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         if (personsService.findByEmail(((Person) target).getEmail()).isPresent())
-            errors.rejectValue("email", "", "Пользователь с таким email уже существует");
+            errors.rejectValue("email", "",
+                    "Пользователь с таким email уже существует");
+
         if (!passwordValidatorService.isPasswordStrong(((Person) target).getPassword()))
-            errors.rejectValue("password", "", "Пароль должен быть не менее восьми символов с хотя бы одной цифрой");
+            errors.rejectValue("password", "",
+                    "Пароль должен быть не менее восьми символов с хотя бы одной цифрой");
     }
 }

@@ -1,4 +1,3 @@
-// Функция для открытия модального окна с данными о выбранном option
 function openModal(id, strike, type, daysToMaturity, price, collateral, action) {
     var modal = document.getElementById("myModal");
     var optionIdField = document.getElementById("optionIdField");
@@ -12,11 +11,9 @@ function openModal(id, strike, type, daysToMaturity, price, collateral, action) 
     var buyOrWriteField = document.getElementById("buyOrWriteField");
     var volumeField = document.getElementById("volumeField");
 
-    // Очистка текста ошибки
     var errorMessageElement = document.getElementById("errorMessage");
     errorMessageElement.textContent = "";
 
-    // Заполняем скрытые поля значениями из объекта option
     optionIdField.value = id;
     strikeField.value = strike;
     typeField.value = type;
@@ -32,24 +29,18 @@ function openModal(id, strike, type, daysToMaturity, price, collateral, action) 
         buyOrWriteField.value = -1;
     }
 
-    // Очищаем поле ввода объема
     volumeField.value = '0';
 
     modal.style.display = "block";
 
-    // Добавляем обработчик события клика за пределами модального окна
     window.addEventListener('click', outsideClick);
-    // Добавляем обработчик события нажатия на клавишу ESC
     window.addEventListener('keydown', escapeKey);
 }
 
-// Добавляем обработчик ввода для удаления ведущих нулей
 document.getElementById("volumeField").addEventListener('input', function() {
-    // Превращаем введенное значение в строку, удаляем ведущие нули и возвращаем обратно
     this.value = this.value.replace(/^0+/, '') || '0';
 });
 
-// Удаление ведущих нулей на потерю фокуса (если пользователь удаляет все цифры, возвращаем пустую строку)
 document.getElementById("volumeField").addEventListener('blur', function() {
     if (this.value === '') {
         this.value = '0';
@@ -81,7 +72,7 @@ document.addEventListener('keydown', function(event) {
     if (event.key === "Enter") {
         var modal = document.getElementById("myModal");
         if (modal.style.display === "block") {
-            event.preventDefault(); // предотвращает стандартное поведение клавиши Enter, если нужно
+            event.preventDefault();
             confirmOperation();
         }
     }
@@ -90,19 +81,16 @@ document.addEventListener('keydown', function(event) {
 function confirmOperation() {
     var form = document.getElementById("optionForm");
 
-    // Получаем значения полей id, volume и buyOrWrite
     var id = form.querySelector("#optionIdField").value;
     var volume = form.querySelector("input[name='volume']").value;
     var buyOrWrite = form.querySelector("input[name='buyOrWrite']").value;
     var csrfToken = form.querySelector("input[name='_csrf']").value;
 
-    // Создаем объект для URL-кодирования данных
     var formData = new URLSearchParams();
     formData.append("id", id);
     formData.append("volume", volume);
     formData.append("buyOrWrite", buyOrWrite);
 
-    // Создаем запрос и таймер для 3-секундного ожидания
     const fetchRequest = fetch("/portfolio/confirmation", {
         method: 'POST',
         headers: {
@@ -116,7 +104,6 @@ function confirmOperation() {
         setTimeout(() => reject(new Error("Время ожидания больше обычного")), 3000)
     );
 
-    // Запускаем гонку между fetch и таймером
     Promise.race([fetchRequest, timeout])
         .then(response => {
             if (response.ok) {
@@ -128,41 +115,33 @@ function confirmOperation() {
             }
         })
         .then(message => {
-            // Отобразить сообщение об успешном завершении торговли
             alert(message);
             closeModal();
             window.location.href = "/portfolio";
         })
         .catch(error => {
             if (error.message === "Время ожидания больше обычного") {
-                // Если время ожидания истекло
                 alert("Есть небольшая задержка с ответом. Ваша операция будет на 100% завершена, но немного позже, не повторяйте её. Все повторные действия с этим активом, кроме первого, будут отменены.");
-                // window.location.href = "/#";
             } else {
-                // Обработать другие ошибки
                 var errorMessageElement = document.getElementById("errorMessage");
                 errorMessageElement.textContent = error.message;
             }
         });
 }
 
-// Функция для округления числа до двух знаков после запятой
 function roundToTwo(num) {
     return +(Math.round(num + "e+2")  + "e-2");
 }
 
 function checkAndReload() {
-    // Проверяем, открыто ли модальное окно
     var modal = document.getElementById("myModal");
     if (modal.style.display === "none" || modal.style.display === "") {
-        // Если модальное окно закрыто, обновляем страницу
         location.reload();
     }
 }
 
 setInterval(checkAndReload, 300000);
 
-// Функция для получения значения параметра из URL
 function getQueryParam(param) {
     var urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);

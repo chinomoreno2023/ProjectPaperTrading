@@ -6,7 +6,6 @@ import options.papertrading.dto.person.PersonDto;
 import options.papertrading.facade.interfaces.IPersonFacade;
 import options.papertrading.models.person.Person;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.util.List;
 

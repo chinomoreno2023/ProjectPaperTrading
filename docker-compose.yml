@@ -51,17 +51,3 @@ services:
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
       - c:/users/ivan/desktop/docker-compose/volumes/server-3/:/bitnami/kafka
-
-#  redis:
-#    image: redis:7.2-rc-alpine
-#    networks:
-#      - app
-#    env_file:
-#      - .env
-#    ports:
-#      - '6379:6379'
-#    command: redis-server --save 20 1 --loglevel warning
-#    volumes:
-#      - redis-data:/data
-
-  

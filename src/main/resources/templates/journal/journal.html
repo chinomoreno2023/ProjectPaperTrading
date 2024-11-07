@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- Yandex.Metrika counter -->
     <script type="text/javascript" >
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
             m[i].l=1*new Date();
@@ -16,7 +15,6 @@
         });
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/97933484" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -26,7 +24,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #333; /* серый асфальтовый фон */
+            background-color: #333;
             margin: 0;
             padding: 0;
             display: flex;
@@ -38,8 +36,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 90%; /* Изменено для адаптации к ширине экрана */
-            height: 90vh; /* Устанавливаем максимальную высоту контейнера до 80% высоты экрана */
+            width: 90%;
+            height: 90vh;
         }
 
         table {
@@ -51,60 +49,59 @@
             margin-bottom: 20px;
             display: table;
             overflow-x: auto;
-            max-height: 80vh; /* Установить максимальную высоту таблицы до 80% высоты экрана */
-            overflow-y: auto; /* Добавить вертикальную прокрутку при необходимости */
+            max-height: 80vh;
+            overflow-y: auto;
             visibility: hidden;
             opacity: 0;
         }
 
-        /* Стили для полосы прокрутки */
         ::-webkit-scrollbar {
-            width: 10px; /* Ширина полосы прокрутки */
+            width: 10px;
         }
 
         ::-webkit-scrollbar-track {
-            background: transparent; /* Цвет фона трека */
+            background: transparent;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #888; /* Цвет полосы прокрутки */
+            background: #888;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #555; /* Цвет полосы прокрутки при наведении */
+            background: #555;
         }
 
         th, td {
-            padding: 5px; /* Уменьшаем отступы внутри ячеек */
-            font-size: 12px; /* Уменьшаем размер шрифта */
-            box-sizing: border-box; /* Включаем padding и border в ширину и высоту элемента */
-            width: auto; /* Изменено на auto */
-            text-align: left; /* Добавлено выравнивание текста по центру */
+            padding: 5px;
+            font-size: 12px;
+            box-sizing: border-box;
+            width: auto;
+            text-align: left;
         }
 
         th {
-            background-color: #ccc; /* платиновый цвет заголовков */
+            background-color: #ccc;
             font-weight: bold;
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2; /* серый фон для четных строк */
+            background-color: #f2f2f2;
         }
 
         tr:hover {
-            background-color: #ddd; /* изменение цвета строки при наведении */
+            background-color: #ddd;
         }
 
         .vertical-table {
-            display: block; /* Добавлено для поддержки горизонтальной прокрутки */
+            display: block;
             width: 100%;
-            overflow-x: auto; /* Добавлено для горизонтальной прокрутки */
+            overflow-x: auto;
         }
 
         .vertical-table th,
         .vertical-table td {
             text-align: left;
-            width: auto; /* Установлено 100% для всех ячеек */
+            width: auto;
         }
 
         @keyframes fade-in {
@@ -113,12 +110,12 @@
         }
         .button-container {
             border-radius: 4px;
-            width: 100%; /* Занимаем всю ширину контейнера */
+            width: 100%;
             text-align: center;
         }
 
         h2 {
-            color: #eee; /* Цвет заголовков */
+            color: #eee;
             padding: 8px 12px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(253, 72, 227, 0.5);
@@ -126,8 +123,8 @@
         }
 
         .styled-button {
-            background-color: #f84ed3; /* платиновый цвет кнопок */
-            color: #eee; /* цвет текста кнопок */
+            background-color: #f84ed3;
+            color: #eee;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
@@ -136,14 +133,14 @@
         }
 
         .styled-button:hover {
-            background-color: #eee; /* изменение цвета кнопок при наведении */
-            color: #f84ed3; /* изменение цвета кнопок при наведении */
+            background-color: #eee;
+            color: #f84ed3;
         }
 
         .menu-bar {
             display: flex;
             justify-content: space-between;
-            position: fixed; /* Закрепляем меню */
+            position: fixed;
             top: 0;
             right: 0;
             background-color: rgba(51, 51, 51, 0.2);
@@ -170,11 +167,11 @@
             display: none;
             flex-direction: column;
             background-color: #444;
-            width: 200px; /* Ширина меню */
+            width: 200px;
             position: absolute;
             top: 50px;
-            right: 0; /* Исходная позиция справа */
-            transform: translateX(0%); /* Перемещаем меню влево */
+            right: 0;
+            transform: translateX(0%);
             padding: 10px 0;
             animation-name: fade-in;
             animation-duration: 0.2s;
@@ -199,9 +196,9 @@
             border: none;
             transition: background-color 0.3s ease;
             border-radius: 4px;
-            width: auto; /* Устанавливаем ширину кнопки по содержимому */
-            margin: 5px auto 0; /* Размещаем кнопку по центру сверху с отступом сверху */
-            padding: 5px 10px; /* Добавляем отступы вокруг текста кнопки */
+            width: auto;
+            margin: 5px auto 0;
+            padding: 5px 10px;
         }
 
         button[type="button"]:hover {
@@ -246,7 +243,6 @@
         </tr>
         </thead>
         <tbody id="journalTableBody">
-        <!-- Здесь будут отображаться записи журнала сделок -->
         <tr th:each="journal : ${journalList}">
             <td th:text="${journal.dateAndTime}"></td>
             <td th:text="${journal.optionName}"></td>
@@ -269,10 +265,10 @@
     function formatDateTime(dateTimeString) {
         var date = new Date(dateTimeString);
         var year = date.getFullYear();
-        var month = ('0' + (date.getMonth() + 1)).slice(-2); // Добавляем ведущий ноль
-        var day = ('0' + date.getDate()).slice(-2); // Добавляем ведущий ноль
-        var hours = ('0' + date.getHours()).slice(-2); // Добавляем ведущий ноль
-        var minutes = ('0' + date.getMinutes()).slice(-2); // Добавляем ведущий ноль
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var day = ('0' + date.getDate()).slice(-2);
+        var hours = ('0' + date.getHours()).slice(-2);
+        var minutes = ('0' + date.getMinutes()).slice(-2);
         return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
     }
 
@@ -301,7 +297,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-CSRF-TOKEN': csrfToken // добавляем CSRF токен в заголовок
+                        'X-CSRF-TOKEN': csrfToken
                     }
                 })
                     .then(response => {
@@ -312,11 +308,11 @@
                         }
                     })
                     .then(message => {
-                        alert(message); // Отображаем сообщение об успешном удалении журнала
-                        window.location.href = "/portfolio/journal"; // Перенаправляем на страницу /portfolio
+                        alert(message);
+                        window.location.href = "/portfolio/journal";
                     })
                     .catch(error => {
-                        alert(error.message); // Отображаем сообщение об ошибке
+                        alert(error.message);
                     });
             }
         });

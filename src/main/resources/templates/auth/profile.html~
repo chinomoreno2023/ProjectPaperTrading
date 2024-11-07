@@ -339,8 +339,9 @@
 </div>
 
 <script>
+    // JavaScript code to show elements after image is loaded
     document.getElementById('logo').onload = function() {
-        document.body.style.visibility = 'visible';
+        document.body.style.visibility = 'visible'; // Показать весь контент после загрузки изображения
         const forms = document.querySelectorAll(".container form");
         forms.forEach(form => form.classList.add("visible"));
     };
@@ -412,16 +413,16 @@
     var feedbackSpan = document.getElementsByClassName("close")[1];
 
     btn.onclick = function() {
-        document.getElementById("errorMessage").textContent = "";
-        document.getElementById("password").value = "";
-        document.getElementById("retypedPassword").value = "";
+        document.getElementById("errorMessage").textContent = "";  // Очищаем сообщение об ошибке
+        document.getElementById("password").value = "";  // Очищаем поле ввода пароля
+        document.getElementById("retypedPassword").value = "";  // Очищаем поле повторного ввода пароля
         modal.style.display = "block";
     }
 
     feedbackBtn.onclick = function() {
-        document.getElementById("feedbackErrorMessage").textContent = "";
-        document.getElementById("subject").value = "";
-        document.getElementById("message").value = "";
+        document.getElementById("feedbackErrorMessage").textContent = "";  // Очищаем сообщение об ошибке
+        document.getElementById("subject").value = "";  // Очищаем поле ввода темы
+        document.getElementById("message").value = "";  // Очищаем поле ввода сообщения
         feedbackModal.style.display = "block";
     }
 

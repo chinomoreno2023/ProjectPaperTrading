@@ -79,7 +79,7 @@ public class PositionSetter {
     }
 
     @Scheduled(cron = "0 05 14 * * MON-FRI")
-    @Retryable(value = { Exception.class }, maxAttempts = 6, backoff = @Backoff(delay = 10000))
+    @Retryable(value = {Exception.class}, maxAttempts = 6, backoff = @Backoff(delay = 10000))
     @Transactional
     public void doClearing() {
         List<Portfolio> optionsInPortfolio = portfoliosRepository.findAll();
@@ -101,7 +101,8 @@ public class PositionSetter {
                 if (portfolio.getVolume() == 0) {
                     log.info("Portfolio {} will be deleted", portfolio);
                     portfoliosRepository.delete(portfolio);
-                } else {
+                }
+                else {
                     log.info("Refreshed portfolio: {}", portfolio);
                     portfoliosRepository.save(portfolio);
                 }
@@ -111,7 +112,7 @@ public class PositionSetter {
 
     @Transactional
     @Scheduled(cron = "0 00 19 * * MON-FRI")
-    @Retryable(value = { Exception.class }, maxAttempts = 6, backoff = @Backoff(delay = 10000))
+    @Retryable(value = {Exception.class}, maxAttempts = 6, backoff = @Backoff(delay = 10000))
     public void doEveningClearing() {
         doClearing();
     }

@@ -24,11 +24,11 @@ public class SpringConfig {
         RetryTemplate retryTemplate = new RetryTemplate();
 
         FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
-        backOffPolicy.setBackOffPeriod(10000); // 10 секунды между попытками
+        backOffPolicy.setBackOffPeriod(10000);
         retryTemplate.setBackOffPolicy(backOffPolicy);
 
         SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
-        retryPolicy.setMaxAttempts(6); // 6 попытки
+        retryPolicy.setMaxAttempts(6);
         retryTemplate.setRetryPolicy(retryPolicy);
 
         return retryTemplate;

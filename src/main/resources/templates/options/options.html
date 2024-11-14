@@ -35,7 +35,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 90%;
+            width: 1040px;
         }
 
         table {
@@ -258,31 +258,36 @@
 
         iframe {
             width: 100%;
-            height: 2000px;
-            margin-bottom: 20px;
+            min-height: 1312px;
+            margin-top: -385px;
             border-radius: 8px;
             border: none;
+            overflow: hidden;
         }
 
         .iframe-container {
-            width: 50%;
-            max-height: 1330px;
-            overflow: hidden;
+            width: 100%;
+            overflow: auto;
             margin-bottom: 30px;
             border-radius: 8px;
-            visibility: hidden;
-        }
-
-        @media (max-width: 1080px) {
-            .iframe-container {
-                width: 100%;
-                height: 580px;
-            }
-        }
-
-        .iframe-loaded {
             box-shadow: 0 0 20px rgba(253, 72, 227, 0.5);
-            visibility: visible;
+        }
+
+        @media (max-width: 1200px) {
+            .iframe-container {
+                height: calc((1312px * 0.7) - 385px);
+                overflow: hidden;
+            }
+            iframe {
+                transform: scale(0.7) translateY(-385px);
+                transform-origin: top left;
+                width: calc(100% / 0.7);
+                height: calc(100% / 0.7);
+                margin: 0;
+            }
+            .container {
+                width: 90%;
+            }
         }
     </style>
 </head>
@@ -378,7 +383,7 @@
     <h2>Опционный калькулятор</h2>
 
     <div class="iframe-container">
-        <iframe src="https://www.moex.com/msn/ru-options-calc" frameborder="0"></iframe>
+        <iframe src="https://www.option.ru/analysis/option#position" frameborder="0"></iframe>
     </div>
 
 </div>

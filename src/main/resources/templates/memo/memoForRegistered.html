@@ -252,74 +252,7 @@
     </div>
 
     <div class="text-block">
-        Теперь немного коснёмся стратегии торговли опционами. Данная платформа не имеет цели давать конкретные рекомендации когда нужно покупать бабочку и т.п. Она для того, чтобы вы могли «потрогать» реальные опционы, понять их ценообразование, гарантийное обеспечение, как меняется цена в зависимости от того или другого движения рынка и т.п. Однако, ниже будут даны и некоторые субъективные видения автора платформы.<br>
-    </div>
-
-    <div class="text-block">
-        Рассмотрим пример на опционе на долларовый фьючерс – Si. Предположим, что вы считаете, что Si хорошо вырастет. Какую позицию вы открываете? На просторах Интернета вы встретите массу советов. Например, сходу купить <a href="https://www.option.ru/glossary/strategy/bull-call-spread" target="_blank" style="color: #f84ed3;">бычий колл спрэд</a>. А если вы решили, что Si улетит, как говорят трейдеры, «туЗэМун», то, непременно, нужно открывать позицию с <a href="https://www.option.ru/glossary/strategy/call-ratio-backspread" target="_blank" style="color: #f84ed3;">пропорциональным обратным колл спрэдом</a> и не один к двум, а один к трём.<br>
-    </div>
-
-    <div class="text-block">
-        Самой рациональной во всех смыслах тактикой в обоих случаях является простая <a href="https://www.option.ru/glossary/strategy/long-call" target="_blank" style="color: #f84ed3;">покупка опциона колл</a>. То же самое и в отношении простой <a href="https://www.option.ru/glossary/strategy/long-put" target="_blank" style="color: #f84ed3;">покупки пута</a>, если вы посчитали, что Si снизится.<br>
-    </div>
-
-    <div class="text-block">
-        Здесь есть важная деталь – если мы считаем, что цена вырастет, мы не <a href="https://www.option.ru/glossary/strategy/short-put" target="_blank" style="color: #f84ed3;">продаём пут</a>, мы <a href="https://www.option.ru/glossary/strategy/long-call" target="_blank" style="color: #f84ed3;">покупаем колл</a>. Мы вообще никогда не открываем короткую позицию первым же опционом. Да, на какой-нибудь американской бирже это вызвало бы недоумение, дескать, какая разница. Но в данной платформе не просто так указана именно Московская биржа. Многие, кто застал жёсткие обвалы (которые стабильно случаются у нас раз в два-три года), помнят, что такое проданные опционы в эти моменты, когда волатильность зашкаливает и, совершенно случайно конечно же, все стаканы становятся пустыми.<br><br>
-        Вернёмся к примеру с Si и рассмотрим <a href="https://www.option.ru/glossary/strategy/bull-call-spread" target="_blank" style="color: #f84ed3;">бычий колл спрэд</a>:<br>
-    </div>
-
-    <div class="scroll-container">
-        <img src="/bull-spread.gif" alt="Bull Spread">
-    </div>
-
-    <div class="text-block">
-        На данном графике изображен вариант, когда вы покупаете <a href="https://www.option.ru/glossary/strategy/bull-call-spread" target="_blank" style="color: #f84ed3;">бычий колл спрэд</a> находясь в позиции A, что сразу же существенно снижает вашу прибыль в случае хорошего движения цены вверх. И даже если в позиции A вы купили только первый колл, а второй колл B продали уже находясь in the money от первого, например, на 69000, то всё равно встаёт вопрос – а зачем? Ответ вроде бы понятен - чтобы снизить общую стоимость позиции на случай, если мы ошиблись и цена начнет снижаться и может быть даже уйдёт ниже A.<br>
-    </div>
-
-    <div class="text-block">
-        Но может быть нам лучше остаться с <a href="https://www.option.ru/glossary/strategy/long-call" target="_blank" style="color: #f84ed3;">купленным коллом</a> и просто выставить стоп-лосс на безубытке или минимальном убытке, чтобы в случае его срабатывания выдохнуть и проанализировать, что не так мы рассчитали?<br>
-    </div>
-
-    <div class="text-block">
-        Куда более рациональным видится применение конкретных опционных конструкций именно тогда, когда ваш прогноз по движению рынка сразу же не сбылся и позиция терпит убытки. Вернёмся к Si и рассмотрим ситуацию убытка:<br>
-    </div>
-
-    <div class="scroll-container">
-        <img src="/call-ratio-spread.gif" alt="Call Ratio Spread">
-    </div>
-
-    <div class="text-block">
-        Вы <a href="https://www.option.ru/glossary/strategy/long-call" target="_blank" style="color: #f84ed3;">купили колл</a>, находясь рядом с ценой A, но цена ушла вниз. Можно продать два колла со страйком выше купленного, на картинке это B, и создать <a href="https://www.option.ru/glossary/strategy/call-ratio-spread" target="_blank" style="color: #f84ed3;">пропорциональный колл спрэд</a>. Как и в примере с прибыльной позицией (когда мы купили <a href="https://www.option.ru/glossary/strategy/bull-call-spread" target="_blank" style="color: #f84ed3;">бычий колл спрэд</a>), мы уменьшили стоимость убыточной позиции. Однако, опять встаёт вопрос о целесообразности. Можно создать какую угодно опционную конструкцию, но важнее понять чего мы ждем от рынка в новых условиях. Ведь если цена ушла вниз временно, и совсем скоро она вновь пойдёт вверх, то наш <a href="https://www.option.ru/glossary/strategy/call-ratio-spread" target="_blank" style="color: #f84ed3;">пропорциональный колл спрэд</a> заставит нас корректировать позицию. Например, докупать колл A, чтобы превратить конструкцию в <a href="https://www.option.ru/glossary/strategy/bull-call-spread" target="_blank" style="color: #f84ed3;">бычий колл спрэд</a> (два купленных колла A и два проданных колла B).<br>
-    </div>
-
-    <div class="text-block">
-        А если мы замешкались и не купили колл на A и цена ушла уже ближе к цене B? Тогда придется уже рассматривать покупку колла выше цены B – на С, чтобы соорудить <a href="https://www.option.ru/glossary/strategy/long-butterfly" target="_blank" style="color: #f84ed3;">бабочку</a>:<br>
-    </div>
-
-    <div class="scroll-container">
-        <img src="/long-butterfly.gif" alt="Butterfly">
-    </div>
-
-    <div class="text-block">
-        Или может даже выкупать назад один колл B, продавать колл С и покупать колл D, чтобы создать <a href="https://www.option.ru/glossary/strategy/long-condor" target="_blank" style="color: #f84ed3;">кондора</a>:<br>
-    </div>
-
-    <div class="scroll-container">
-        <img src="/long-condor.gif" alt="Condor">
-    </div>
-
-    <div class="text-block">
-        Однако, если цена пошла против нас, а мы осознали, что это изменение тренда, а не временное явление, зачем тогда нам вообще сооружать тот <a href="https://www.option.ru/glossary/strategy/call-ratio-spread" target="_blank" style="color: #f84ed3;">пропорциональный колл спрэд</a>? Не правильнее ли закрыть колл с каким-то убытком и <a href="https://www.option.ru/glossary/strategy/long-put" target="_blank" style="color: #f84ed3;">купить пут</a>? И здесь мы опять возвращаемся к теме вхождения в рынок с просто купленным коллом или путом.<br>
-    </div>
-
-    <div class="text-block">
-        «Мы решили, что цена...», «наш прогноз сбылся...», «мы уверены...» - все эти лингвистические конструкции из текста выше говорят нам о главном – любую позицию мы открываем только после анализа. Мы не торгуем ради торговли, ради красивой купленной бабочки, мы торгуем для прибыли.<br><br>
-        Другие опционные стратегии можно посмотреть по <a href="https://www.option.ru/glossary/strategy" target="_blank" style="color: #f84ed3;">ссылке</a>.<br><br>
         В разделе <a href="/auth/profile" target="_blank" style="color: #f84ed3;">«Профиль»</a> есть форма обратной связи, если у вас есть вопросы или комментарии.
-    </div>
-
-    <div class="button-container">
-        <a href="/portfolio">Начать</a>
     </div>
 </div>
 

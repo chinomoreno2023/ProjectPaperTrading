@@ -35,7 +35,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 90%;
+            width: 1040px;
         }
 
         table {
@@ -261,59 +261,36 @@
 
         iframe {
             width: 100%;
-            height: 2000px;
-            margin-bottom: 20px;
+            min-height: 1312px;
+            margin-top: -385px;
             border-radius: 8px;
             border: none;
+            overflow: hidden;
         }
 
         .iframe-container {
-            width: 50%;
-            max-height: 0;
-            overflow: hidden;
+            width: 100%;
+            overflow: auto;
             margin-bottom: 30px;
             border-radius: 8px;
-            visibility: hidden;
-        }
-
-        @media (max-width: 1080px) {
-            .iframe-container {
-                width: 100%;
-                height: 580px;
-            }
-        }
-
-        .iframe-loaded {
+            display: none;
             box-shadow: 0 0 20px rgba(253, 72, 227, 0.5);
-            visibility: visible;
         }
 
-        .styled-button.loading {
-            position: relative;
-            pointer-events: none;
-        }
-
-        .styled-button.loading::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 16px;
-            height: 16px;
-            margin-top: -8px;
-            margin-left: -8px;
-            border: 2px solid #eee;
-            border-top-color: #f84ed3;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
+        @media (max-width: 1200px) {
+            .iframe-container {
+                height: calc((1312px * 0.7) - 385px);
+                overflow: hidden;
             }
-            to {
-                transform: rotate(360deg);
+            iframe {
+                transform: scale(0.7) translateY(-385px);
+                transform-origin: top left;
+                width: calc(100% / 0.7);
+                height: calc(100% / 0.7);
+                margin: 0;
+            }
+            .container {
+                width: 90%;
             }
         }
     </style>
@@ -437,7 +414,7 @@
     </div>
 
     <div class="iframe-container">
-        <iframe src="https://www.moex.com/msn/ru-options-calc" frameborder="0"></iframe>
+        <iframe src="https://www.option.ru/analysis/option#position" frameborder="0"></iframe>
     </div>
 
 </div>
@@ -465,21 +442,8 @@
 
 <script>
     function showCalculator() {
-        var iframe = document.querySelector("iframe");
-        var container = iframe.parentElement;
-        var button = document.querySelector(".styled-button[onclick='showCalculator()']");
-
-        button.classList.add("loading");
-
-        iframe.onload = function() {
-            container.classList.add("iframe-loaded");
-            container.style.maxHeight = "1330px";
-            button.classList.remove("loading");
-        };
-
-        container.style.visibility = "visible";
-        container.style.maxHeight = "0";
-        iframe.src = iframe.src;
+        const iframeContainer = document.querySelector('.iframe-container');
+        iframeContainer.style.display = 'block';
     }
 </script>
 

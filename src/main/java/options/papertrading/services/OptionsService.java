@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.dto.portfolio.PortfolioDto;
 import options.papertrading.facade.interfaces.IOptionFacade;
+import options.papertrading.facade.interfaces.IPositionSetter;
 import options.papertrading.models.option.Option;
 import options.papertrading.repositories.OptionsRepository;
 import options.papertrading.util.mappers.OptionMapper;
@@ -26,7 +27,7 @@ public class OptionsService implements IOptionFacade {
     private final OptionsRepository optionsRepository;
     private final OptionMapper optionMapper;
     private final VolumeValidator volumeValidator;
-    private final PositionSetter positionSetter;
+    private final IPositionSetter positionSetter;
 
     @Transactional(readOnly = true)
     public List<Option> findAll() {

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.dto.portfolio.PortfolioDto;
 import options.papertrading.facade.interfaces.IPortfolioFacade;
+import options.papertrading.facade.interfaces.IPositionSetter;
 import options.papertrading.models.option.Option;
 import options.papertrading.models.person.Person;
 import options.papertrading.models.portfolio.Portfolio;
@@ -43,7 +44,7 @@ public class PortfoliosService implements IPortfolioFacade {
     private final PortfolioMapper portfolioMapper;
     private final PersonsService personsService;
     private final OptionsService optionsService;
-    private final PositionSetter positionSetter;
+    private final IPositionSetter positionSetter;
     private final JournalService journalService;
     private final EntityManager entityManager;
     private final JournalRepository journalRepository;

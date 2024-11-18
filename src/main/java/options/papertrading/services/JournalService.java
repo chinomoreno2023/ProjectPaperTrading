@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.journal.JournalDto;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.facade.interfaces.IJournalFacade;
+import options.papertrading.facade.interfaces.IPositionSetter;
 import options.papertrading.models.journal.Journal;
 import options.papertrading.models.person.Person;
 import options.papertrading.models.portfolio.Portfolio;
@@ -25,7 +26,7 @@ public class JournalService implements IJournalFacade {
     private final JournalMapper journalMapper;
     private final JournalRepository journalRepository;
     private final PersonsService personsService;
-    private final PositionSetter positionSetter;
+    private final IPositionSetter positionSetter;
 
     @Transactional(readOnly = true)
     public List<JournalDto> showJournal() {

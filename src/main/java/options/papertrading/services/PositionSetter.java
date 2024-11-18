@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.option.OptionDto;
+import options.papertrading.facade.interfaces.IPositionSetter;
 import options.papertrading.models.option.Option;
 import options.papertrading.models.person.Person;
 import options.papertrading.models.portfolio.Portfolio;
@@ -14,12 +15,13 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Slf4j
 @Service
 @AllArgsConstructor
-public class PositionSetter {
+public class PositionSetter implements IPositionSetter {
     private final EntityManager entityManager;
     private final PersonsService personsService;
     private final PortfoliosRepository portfoliosRepository;

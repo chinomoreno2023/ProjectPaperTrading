@@ -102,7 +102,7 @@ public class PersonsService implements IPersonFacade {
 
     @Transactional(readOnly = true)
     public List<PersonDto> getPersons() {
-        return findAll().stream()
+        return findAll().parallelStream()
                         .map(this::convertToPersonDto)
                         .collect(Collectors.toList());
     }

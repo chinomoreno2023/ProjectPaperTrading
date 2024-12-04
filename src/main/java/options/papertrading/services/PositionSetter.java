@@ -46,7 +46,7 @@ public class PositionSetter implements IPositionSetter {
     public boolean isContained(@NonNull Portfolio portfolio) {
         log.info("Is portfolio '{}' contained?", portfolio);
         return portfoliosRepository.findAllByOwner(portfolio.getOwner())
-                                   .stream()
+                                   .parallelStream()
                                    .anyMatch(item -> portfolio.getOption().getId().equals(item.getOption().getId()));
     }
 

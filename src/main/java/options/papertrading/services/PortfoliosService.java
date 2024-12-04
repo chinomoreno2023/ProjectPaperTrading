@@ -69,7 +69,7 @@ public class PortfoliosService implements IPortfolioFacade {
     }
 
     public List<PortfolioDto> convertListToPortfolioDtoList(@NonNull List<Portfolio> portfolios) {
-        List<PortfolioDto> portfolioDtoList = portfolios.stream()
+        List<PortfolioDto> portfolioDtoList = portfolios.parallelStream()
                                                         .map(this::convertToPortfolioDto)
                                                         .collect(Collectors.toList());
         log.info("Converting portfolio list '{}' to portfolioDto list. Result: {} ", portfolios, portfolioDtoList);
@@ -529,7 +529,7 @@ public class PortfoliosService implements IPortfolioFacade {
             int counterForJournals = 0;
             while (owner.getOpenLimit() <= owner.getCurrentNetPosition() * 0.5) {
                 Portfolio portfolioWithMinVariat = optionsInPortfolio
-                        .stream()
+                        .parallelStream()
                         .filter(portfolio -> portfolio.getVolume() != 0)
                         .min(Comparator.comparingDouble(Portfolio::getVariatMargin))
                         .orElse(null);

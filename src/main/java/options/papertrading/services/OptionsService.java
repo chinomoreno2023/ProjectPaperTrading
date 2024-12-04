@@ -41,7 +41,7 @@ public class OptionsService implements IOptionFacade {
 
         if (!currentTime.toLocalTime().isBefore(timeToCheck)) {
             List<OptionDto> options = optionsRepository.findByIdStartingWith(prefix)
-                                                       .stream()
+                                                       .parallelStream()
                                                        .filter(option -> option.getDaysToMaturity() > 0)
                                                        .sorted(Comparator.comparing(Option::getStrike))
                                                        .map(this::convertToOptionDto)
@@ -50,7 +50,7 @@ public class OptionsService implements IOptionFacade {
         }
 
         List<OptionDto> options = optionsRepository.findByIdStartingWith(prefix)
-                                                   .stream()
+                                                   .parallelStream()
                                                    .filter(option -> option.getDaysToMaturity() >= 0)
                                                    .sorted(Comparator.comparing(Option::getStrike))
                                                    .map(this::convertToOptionDto)
@@ -60,7 +60,7 @@ public class OptionsService implements IOptionFacade {
 
     @Transactional(readOnly = true)
     public List<OptionDto> showOptionsFromCurrentPortfolios(List<PortfolioDto> portfolios) {
-        List<OptionDto> options = portfolios.stream()
+        List<OptionDto> options = portfolios.parallelStream()
                                             .map(portfolio -> convertToOptionDto(findByOptionId(portfolio.getId())))
                                             .collect(Collectors.toList());
         log.info("Finding options from current portfolios. Result: {}", options);
@@ -91,7 +91,7 @@ public class OptionsService implements IOptionFacade {
     }
 
     public List<OptionDto> convertListToOptionDtoList(@NonNull List<Option> options) {
-        return options.stream()
+        return options.parallelStream()
                       .map(this::convertToOptionDto)
                       .collect(Collectors.toList());
     }

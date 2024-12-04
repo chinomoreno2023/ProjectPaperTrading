@@ -49,7 +49,7 @@ public class JournalService implements IJournalFacade {
     }
 
     public List<JournalDto> convertJournalListToJournalDtoList(@NonNull List<Journal> journalList) {
-        List<JournalDto> journalDtoList = journalList.stream()
+        List<JournalDto> journalDtoList = journalList.parallelStream()
                 .sorted(Comparator.comparing(Journal::getDateAndTime).reversed())
                 .map(this::convertJournalToJournalDto)
                 .collect(Collectors.toList());

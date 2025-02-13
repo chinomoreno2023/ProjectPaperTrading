@@ -15,5 +15,5 @@ public interface IPersonFacade {
     void updatePassword(Person person, String password);
     Person getCurrentPerson();
     void sendMail(String email, String subject, String message) throws MessagingException;
-    void save(Person person);
+    Person save(Person person);
 }

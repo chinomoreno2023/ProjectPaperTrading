@@ -11,6 +11,7 @@ import options.papertrading.models.option.Option;
 import options.papertrading.repositories.OptionsRepository;
 import options.papertrading.util.mappers.OptionMapper;
 import options.papertrading.util.validators.VolumeValidator;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -35,6 +36,7 @@ public class OptionsService implements IOptionFacade {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "OptionsService::showOptionsListByPrefix", key = "#prefix")
     public List<OptionDto> showOptionsListByPrefix(String prefix) {
         LocalDateTime currentTime = LocalDateTime.now();
         LocalTime timeToCheck = LocalTime.of(14, 00);

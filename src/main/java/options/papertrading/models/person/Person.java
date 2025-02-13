@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import options.papertrading.models.journal.Journal;
 import options.papertrading.models.portfolio.Portfolio;
+
 import java.util.List;
 
 @Entity

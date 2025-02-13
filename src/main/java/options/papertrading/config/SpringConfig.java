@@ -12,7 +12,7 @@ import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
-@ComponentScan({"options.papertrading", "kafka"})
+@ComponentScan({"options.papertrading", "kafka", "redis"})
 @EnableScheduling
 @EnableRetry
 @EnableJpaRepositories(basePackages = {"kafka.consumer.persistence.repository", "options.papertrading.repositories"})

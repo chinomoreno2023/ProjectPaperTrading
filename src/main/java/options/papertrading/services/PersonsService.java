@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -58,9 +59,10 @@ public class PersonsService implements IPersonFacade {
     }
 
     @Transactional
-    public void save(@NonNull Person person) {
+    public Person save(@NonNull Person person) {
         log.info("Saving {} to DB", person);
         personsRepository.save(person);
+        return person;
     }
 
     public Person convertToPerson(@NonNull PersonDto personDto) {
@@ -97,6 +99,10 @@ public class PersonsService implements IPersonFacade {
         final PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         log.info("Current person is {}", personDetails.getPerson());
         final long id = personDetails.getPerson().getId();
+        return getPersonById(id);
+    }
+
+    public Person getPersonById(long id) {
         return personsRepository.findById(id);
     }
 

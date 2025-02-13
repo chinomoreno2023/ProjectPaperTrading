@@ -1,9 +1,11 @@
 package options.papertrading.dto.option;
 
 import lombok.Data;
+import java.io.Serializable;
 
 @Data
-public class OptionDto {
+public class OptionDto implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String id;
     private int strike;
     private String type;

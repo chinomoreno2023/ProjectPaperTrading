@@ -9,6 +9,7 @@ services:
     image: bitnami/kafka:latest
     ports:
      - "9092:9092"
+    restart: always
     environment:
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_KRAFT_CLUSTER_ID=PVjHlx7ESeesq55jeB6Efw5d
@@ -26,6 +27,7 @@ services:
     image: bitnami/kafka:latest
     ports:
      - "9094:9094"
+    restart: always
     environment:
       - KAFKA_CFG_NODE_ID=2
       - KAFKA_KRAFT_CLUSTER_ID=PVjHlx7ESeesq55jeB6Efw5d
@@ -43,6 +45,7 @@ services:
     image: bitnami/kafka:latest
     ports:
      - "9096:9096"
+    restart: always
     environment:
       - KAFKA_CFG_NODE_ID=3
       - KAFKA_KRAFT_CLUSTER_ID=PVjHlx7ESeesq55jeB6Efw5d
@@ -58,10 +61,47 @@ services:
 
   redis:
     image: redis:7.2-rc-alpine
-    restart: always
     container_name: redis_with_no_password
     ports:
      - "6379:6379"
-    command: redis-server --save 20 1 --loglevel warning
+    restart: always
+    command: redis-server --save "" --appendonly no --loglevel warning
+
+  rabbit1:
+    image: rabbitmq:4-management
+    hostname: rabbit1
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    restart: always
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=mysecret
+      - RABBITMQ_DEFAULT_USER=chinomoreno
+      - RABBITMQ_DEFAULT_PASS=xvnzcb135
+      - RABBITMQ_CLUSTER_NODE_TYPE=disc
+      - RABBITMQ_CLUSTER_PARTITION_HANDLING=autoheal
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit disk_free_limit 2147483648
     volumes:
-      - cache:/data
+      - c:/users/ivan/desktop/docker-compose/volumes/data-rabbit1:/var/lib/rabbitmq
+      - c:/users/ivan/desktop/docker-compose/volumes/mnesia-rabbit1:/var/lib/rabbitmq/mnesia
+
+  rabbit2:
+    image: rabbitmq:4-management
+    hostname: rabbit2
+    ports:
+      - "15673:15672"
+      - "5673:5672"
+    restart: always
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=mysecret
+      - RABBITMQ_DEFAULT_USER=chinomoreno
+      - RABBITMQ_DEFAULT_PASS=xvnzcb135
+      - RABBITMQ_CLUSTER_NODE_TYPE=disc
+      - RABBITMQ_CLUSTER_PARTITION_HANDLING=autoheal
+      - RABBITMQ_NODENAME=rabbit@rabbit2
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit disk_free_limit 2147483648
+    volumes:
+      - c:/users/ivan/desktop/docker-compose/volumes/data-rabbit2:/var/lib/rabbitmq
+      - c:/users/ivan/desktop/docker-compose/volumes/mnesia-rabbit2:/var/lib/rabbitmq/mnesia
+    depends_on:
+      - rabbit1

@@ -33,8 +33,7 @@ public class JournalService implements IJournalFacade {
     public List<JournalDto> showJournal() {
         Person owner = personsService.getCurrentPerson();
         List<Journal> journalList = journalRepository.findAllByOwner(owner);
-        List<JournalDto> journalDtoList = convertJournalListToJournalDtoList(journalList);
-        return journalDtoList;
+        return convertJournalListToJournalDtoList(journalList);
     }
 
     public JournalDto convertJournalToJournalDto(@NonNull Journal journal) {

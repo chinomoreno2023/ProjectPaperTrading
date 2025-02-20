@@ -4,6 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .github
+data
+docker
+default-debezium.json
+docker-compose.yml
 
 ### STS ###
 .apt_generated
@@ -15,7 +19,6 @@ target/
 .sts4-cache
 *.properties
 .env
-docker-compose.yml
 
 ### IntelliJ IDEA ###
 .idea

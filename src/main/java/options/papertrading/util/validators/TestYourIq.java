@@ -1,9 +1,11 @@
 package options.papertrading.util.validators;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class TestYourIq {
     private int number1;

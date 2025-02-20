@@ -53,7 +53,7 @@ public class PortfolioController {
     }
 
     @PostMapping("/confirmation")
-    public ResponseEntity<String> addPortfolio(@RequestParam("id") String id,
+    public ResponseEntity<Object> addPortfolio(@RequestParam("id") String id,
                                                @RequestParam("volume") int volume,
                                                @RequestParam("buyOrWrite") int buyOrWrite) {
 

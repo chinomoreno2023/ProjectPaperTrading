@@ -10,6 +10,7 @@ import options.papertrading.models.option.Option;
 import options.papertrading.models.person.Person;
 import options.papertrading.models.portfolio.Portfolio;
 import options.papertrading.repositories.PortfoliosRepository;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,6 +26,7 @@ public class PositionSetter implements IPositionSetter {
     private final EntityManager entityManager;
     private final PersonsService personsService;
     private final PortfoliosRepository portfoliosRepository;
+    private final BeanFactory beanFactory;
 
     @Transactional(readOnly = true)
     public boolean isThereEnoughMoneyForBuy(@NonNull Portfolio portfolio) {
@@ -90,12 +92,16 @@ public class PositionSetter implements IPositionSetter {
                 entityManager.refresh(portfolio.getOption());
                 double savedVariatMargin = portfolio.getVariatMargin();
                 if (portfolio.getVolume() < 0) {
-                    portfolio.setVariatMargin(savedVariatMargin + (updateVariatMargin(portfolio) * (-1)));
+                    portfolio.setVariatMargin(savedVariatMargin
+                            + (beanFactory.getBean(IPositionSetter.class).updateVariatMargin(portfolio)
+                            * (-1)));
                 }
                 if (portfolio.getVolume() > 0) {
-                    portfolio.setVariatMargin(updateVariatMargin(portfolio) + savedVariatMargin);
+                    portfolio.setVariatMargin(
+                            beanFactory.getBean(IPositionSetter.class).updateVariatMargin(portfolio)
+                                    + savedVariatMargin);
                 }
-                portfolio.setTradePrice(countPriceInRur(portfolio));
+                portfolio.setTradePrice(beanFactory.getBean(IPositionSetter.class).countPriceInRur(portfolio));
                 portfolio.getOwner().setOpenLimit(portfolio.getOwner().getOpenLimit() + portfolio.getVariatMargin());
                 portfolio.setVariatMargin(0);
                 personsService.save(portfolio.getOwner());
@@ -116,7 +122,7 @@ public class PositionSetter implements IPositionSetter {
     @Scheduled(cron = "0 00 19 * * MON-FRI")
     @Retryable(value = {Exception.class}, maxAttempts = 6, backoff = @Backoff(delay = 10000))
     public void doEveningClearing() {
-        doClearing();
+        beanFactory.getBean(IPositionSetter.class).doClearing();
     }
 
     @Transactional
@@ -131,12 +137,17 @@ public class PositionSetter implements IPositionSetter {
                              entityManager.refresh(portfolio.getOption());
                              double savedVariatMargin = portfolio.getVariatMargin();
                              if (portfolio.getVolume() < 0) {
-                                 portfolio.setVariatMargin(savedVariatMargin + (updateVariatMargin(portfolio) * (-1)));
+                                 portfolio.setVariatMargin(savedVariatMargin
+                                         + (beanFactory.getBean(IPositionSetter.class).updateVariatMargin(portfolio)
+                                         * (-1)));
                              }
                              else {
-                                 portfolio.setVariatMargin(updateVariatMargin(portfolio) + savedVariatMargin);
+                                 portfolio.setVariatMargin(
+                                         beanFactory.getBean(IPositionSetter.class).updateVariatMargin(portfolio)
+                                                 + savedVariatMargin);
                              }
-                             portfolio.setTradePrice(countPriceInRur(portfolio));
+                             portfolio.setTradePrice(
+                                     beanFactory.getBean(IPositionSetter.class).countPriceInRur(portfolio));
                              });
             owner.setOptionsInPortfolio(optionsInPortfolio);
             log.info("Refreshed portfolios: {}", optionsInPortfolio);
@@ -146,7 +157,8 @@ public class PositionSetter implements IPositionSetter {
 
     @Transactional
     public double updateVariatMargin(@NonNull Portfolio portfolio) {
-        portfolio.setVariatMargin(countPriceInRur(portfolio) * Math.abs(portfolio.getVolume())
+        portfolio.setVariatMargin(beanFactory.getBean(IPositionSetter.class).countPriceInRur(portfolio)
+                * Math.abs(portfolio.getVolume())
                 - (portfolio.getTradePrice() * Math.abs(portfolio.getVolume())));
         double updatedVariatMargin = portfolio.getVariatMargin();
         log.info("Updated variat margin is {}", updatedVariatMargin);

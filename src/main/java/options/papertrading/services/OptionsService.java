@@ -11,6 +11,7 @@ import options.papertrading.models.option.Option;
 import options.papertrading.repositories.OptionsRepository;
 import options.papertrading.util.mappers.OptionMapper;
 import options.papertrading.util.validators.VolumeValidator;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ public class OptionsService implements IOptionFacade {
     private final OptionMapper optionMapper;
     private final VolumeValidator volumeValidator;
     private final IPositionSetter positionSetter;
+    private final BeanFactory beanFactory;
 
     @Transactional(readOnly = true)
     public List<Option> findAll() {
@@ -42,29 +44,28 @@ public class OptionsService implements IOptionFacade {
         LocalTime timeToCheck = LocalTime.of(14, 00);
 
         if (!currentTime.toLocalTime().isBefore(timeToCheck)) {
-            List<OptionDto> options = optionsRepository.findByIdStartingWith(prefix)
+            return optionsRepository.findByIdStartingWith(prefix)
                                                        .parallelStream()
                                                        .filter(option -> option.getDaysToMaturity() > 0)
                                                        .sorted(Comparator.comparing(Option::getStrike))
                                                        .map(this::convertToOptionDto)
                                                        .collect(Collectors.toList());
-            return options;
         }
 
-        List<OptionDto> options = optionsRepository.findByIdStartingWith(prefix)
+        return optionsRepository.findByIdStartingWith(prefix)
                                                    .parallelStream()
                                                    .filter(option -> option.getDaysToMaturity() >= 0)
                                                    .sorted(Comparator.comparing(Option::getStrike))
                                                    .map(this::convertToOptionDto)
                                                    .collect(Collectors.toList());
-        return options;
     }
 
     @Transactional(readOnly = true)
     public List<OptionDto> showOptionsFromCurrentPortfolios(List<PortfolioDto> portfolios) {
         List<OptionDto> options = portfolios.parallelStream()
-                                            .map(portfolio -> convertToOptionDto(findByOptionId(portfolio.getId())))
-                                            .collect(Collectors.toList());
+                .map(portfolio -> convertToOptionDto(
+                                beanFactory.getBean(OptionsService.class).findByOptionId(portfolio.getId())))
+                .collect(Collectors.toList());
         log.info("Finding options from current portfolios. Result: {}", options);
         return options;
     }
@@ -89,7 +90,7 @@ public class OptionsService implements IOptionFacade {
 
     @Transactional(readOnly = true)
     public List<OptionDto> showOptionsList() {
-        return convertListToOptionDtoList(findAll());
+        return convertListToOptionDtoList(beanFactory.getBean(OptionsService.class).findAll());
     }
 
     public List<OptionDto> convertListToOptionDtoList(@NonNull List<Option> options) {

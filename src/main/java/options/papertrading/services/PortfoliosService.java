@@ -20,6 +20,7 @@ import options.papertrading.util.converters.TextConverter;
 import options.papertrading.util.exceptions.InsufficientFundsException;
 import options.papertrading.util.mail.SmtpMailSender;
 import options.papertrading.util.mappers.PortfolioMapper;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -33,7 +34,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,6 +51,7 @@ public class PortfoliosService implements IPortfolioFacade {
     private final SmtpMailSender smtpMailSender;
     private final TextConverter textConverter;
     private final ProducerService producerService;
+    private final BeanFactory beanFactory;
 
     @Value("${pathToMarginCallMail}")
     private String pathToMarginCallMail;
@@ -79,8 +80,9 @@ public class PortfoliosService implements IPortfolioFacade {
     public List<PortfolioDto> showAllPortfolios() {
         positionSetter.updateCurrentNetPositionAndOpenLimit();
         positionSetter.updateAllVariatMargin();
-        marginCallCheck();
-        return convertListToPortfolioDtoList(findAllByOwner(personsService.getCurrentPerson()));
+        beanFactory.getBean(IPortfolioFacade.class).marginCallCheck();
+        return convertListToPortfolioDtoList(beanFactory.getBean(PortfoliosService.class)
+                .findAllByOwner(personsService.getCurrentPerson()));
     }
 
     @Transactional(readOnly = true)
@@ -115,7 +117,8 @@ public class PortfoliosService implements IPortfolioFacade {
 
     @Transactional
     public void addPortfolio(String id, int volume, int buyOrWrite) {
-        addPortfolio(optionsService.createOptionDtoFromView(id, volume, buyOrWrite));
+        beanFactory.getBean(IPortfolioFacade.class)
+                .addPortfolio(optionsService.createOptionDtoFromView(id, volume, buyOrWrite));
     }
 
     @Transactional
@@ -141,10 +144,10 @@ public class PortfoliosService implements IPortfolioFacade {
         }
 
         if (positionSetter.isContained(portfolio)) {
-            addPortfolioIfItIsContained(optionDto);
+            beanFactory.getBean(PortfoliosService.class).addPortfolioIfItIsContained(optionDto);
         }
         else {
-            addPortfolioIfItIsNotContained(optionDto);
+            beanFactory.getBean(PortfoliosService.class).addPortfolioIfItIsNotContained(optionDto);
         }
     }
 
@@ -154,7 +157,6 @@ public class PortfoliosService implements IPortfolioFacade {
         switch (optionDto.getBuyOrWrite()) {
             case 1:
                 if (positionSetter.isThereEnoughMoneyForBuy(portfolio)) {
-                    journalService.addJournal(portfolio, optionDto);
 
                     portfolio.setTradePrice(positionSetter.countPriceInRur(portfolio));
                     portfolio.setVolatilityWhenWasTrade(portfolio.getOption().getVolatility());
@@ -165,12 +167,8 @@ public class PortfoliosService implements IPortfolioFacade {
                             - portfolio.getCollateralWhenWasTrade() * portfolio.getVolume());
                     log.info("Final portfolio: {}", portfolio);
 
-                    try {
-                        producerService.createEvent(new TradeCreatedEventDto(null, portfolio));
-                    }
-                    catch (InterruptedException | ExecutionException exception) {
-                        throw new RuntimeException(exception);
-                    }
+                    producerService.createEvent(new TradeCreatedEventDto(null, portfolio));
+                    journalService.addJournal(portfolio, optionDto);
                 }
                 else {
                     log.info("Insufficient funds to complete the trade");
@@ -178,9 +176,8 @@ public class PortfoliosService implements IPortfolioFacade {
                 }
                 break;
 
-                case -1:
+            case -1:
                 if (positionSetter.isThereEnoughMoneyForWrite(portfolio)) {
-                    journalService.addJournal(portfolio, optionDto);
 
                     portfolio.setVolume(optionDto.getVolume() * -1);
                     portfolio.setTradePrice(positionSetter.countPriceInRur(portfolio));
@@ -192,47 +189,54 @@ public class PortfoliosService implements IPortfolioFacade {
                             - portfolio.getCollateralWhenWasTrade() * optionDto.getVolume());
                     log.info("Final portfolio: {}", portfolio);
 
-                    try {
-                        producerService.createEvent(new TradeCreatedEventDto(null, portfolio));
-                    }
-                    catch (InterruptedException | ExecutionException exception) {
-                        throw new RuntimeException(exception);
-                    }
+                    producerService.createEvent(new TradeCreatedEventDto(null, portfolio));
+                    journalService.addJournal(portfolio, optionDto);
                 }
                 else {
                     log.info("Insufficient funds to complete the trade");
                     throw new InsufficientFundsException();
                 }
                 break;
+            default:
+                log.error("Unknown buyOrWrite: {}", optionDto.getBuyOrWrite());
+                throw new IllegalArgumentException();
         }
     }
 
     @Transactional
     public void addPortfolioIfItIsContained(@NonNull OptionDto optionDto) {
         Portfolio newPortfolio = convertOptionDtoToPortfolio(optionDto);
-        Portfolio oldPortfolio = findByOwnerAndOption(personsService.getCurrentPerson(),
-                                                      optionsService.findByOptionId(newPortfolio.getOption().getId()));
+        Portfolio oldPortfolio = beanFactory.getBean(PortfoliosService.class)
+                .findByOwnerAndOption(personsService.getCurrentPerson(),
+                        optionsService.findByOptionId(newPortfolio.getOption().getId()));
         log.info("Old portfolio is {}", newPortfolio);
         log.info("New portfolio is {}", oldPortfolio);
 
         switch (optionDto.getBuyOrWrite()) {
             case 1:
                 if (positionSetter.checkDirectOrReverse(optionDto, oldPortfolio)) {
-                    directBuyPortfolioIfItIsContained(newPortfolio, oldPortfolio);
+                    beanFactory.getBean(PortfoliosService.class)
+                            .directBuyPortfolioIfItIsContained(newPortfolio, oldPortfolio);
                 }
-                else reverseBuyPortfolioIfItIsContained(newPortfolio, oldPortfolio);
+                else beanFactory.getBean(PortfoliosService.class)
+                        .reverseBuyPortfolioIfItIsContained(newPortfolio, oldPortfolio);
                 break;
 
             case -1:
                 if (positionSetter.checkDirectOrReverse(optionDto, oldPortfolio)) {
                     newPortfolio.setVolume(optionDto.getVolume() * -1);
-                    directWritePortfolioIfItIsContained(newPortfolio, oldPortfolio);
+                    beanFactory.getBean(PortfoliosService.class)
+                            .directWritePortfolioIfItIsContained(newPortfolio, oldPortfolio);
                 }
                 else {
                     newPortfolio.setVolume(optionDto.getVolume() * -1);
-                    reverseWritePortfolioIfItIsContained(newPortfolio, oldPortfolio);
+                    beanFactory.getBean(PortfoliosService.class)
+                            .reverseWritePortfolioIfItIsContained(newPortfolio, oldPortfolio);
                 }
                 break;
+            default:
+                log.error("Unknown buyOrWrite: {}", optionDto.getBuyOrWrite());
+                throw new IllegalArgumentException();
         }
     }
 
@@ -258,12 +262,7 @@ public class PortfoliosService implements IPortfolioFacade {
             log.info("New portfolio {} will be buy", newPortfolio);
             log.info("Old portfolio {} will be delete", oldPortfolio);
 
-            try {
-                producerService.createEvent(new TradeCreatedEventDto(oldPortfolio, newPortfolio));
-            }
-            catch (InterruptedException | ExecutionException exception) {
-                throw new RuntimeException(exception);
-            }
+            producerService.createEvent(new TradeCreatedEventDto(oldPortfolio, newPortfolio));
         }
         else {
             log.info("Insufficient funds to complete the trade");
@@ -288,13 +287,7 @@ public class PortfoliosService implements IPortfolioFacade {
             oldPortfolio.setVolume(0);
             oldPortfolio.setTradePrice(positionSetter.countPriceInRur(oldPortfolio));
 
-            try {
-                producerService.createEvent(new TradeCreatedEventDto(null, oldPortfolio));
-            }
-            catch (InterruptedException | ExecutionException exception) {
-                throw new RuntimeException(exception);
-            }
-
+            producerService.createEvent(new TradeCreatedEventDto(null, oldPortfolio));
         }
         else if (newPortfolio.getVolume() < Math.abs(oldPortfolio.getVolume())) {
             positionSetter.updateCurrentNetPositionAndOpenLimit();
@@ -304,17 +297,12 @@ public class PortfoliosService implements IPortfolioFacade {
                     - newPortfolio.getCollateralWhenWasTrade() * newPortfolio.getVolume());
             newPortfolio.getOwner().setOpenLimit(newPortfolio.getOwner().getOpenLimit()
                     + newPortfolio.getCollateralWhenWasTrade() * newPortfolio.getVolume());
-            finalOperationsForReverseBuyPortfolioIfItIsContained(newPortfolio, oldPortfolio);
+            beanFactory.getBean(PortfoliosService.class)
+                    .finalOperationsForReverseBuyPortfolioIfItIsContained(newPortfolio, oldPortfolio);
             log.info("New portfolio {} will be buy", newPortfolio);
             log.info("Old portfolio {} will be delete", oldPortfolio);
 
-            try {
-                producerService.createEvent(new TradeCreatedEventDto(oldPortfolio, newPortfolio));
-            }
-            catch (InterruptedException | ExecutionException exception) {
-                throw new RuntimeException(exception);
-            }
-
+            producerService.createEvent(new TradeCreatedEventDto(oldPortfolio, newPortfolio));
         }
         else if (newPortfolio.getVolume() > Math.abs(oldPortfolio.getVolume())) {
             if (positionSetter.isThereEnoughMoneyForReverseBuy(oldPortfolio, newPortfolio)) {
@@ -327,17 +315,12 @@ public class PortfoliosService implements IPortfolioFacade {
                 newPortfolio.getOwner().setOpenLimit(newPortfolio.getOwner().getOpenLimit()
                         + oldPortfolio.getOption().getWriteCollateral() * Math.abs(oldPortfolio.getVolume())
                         - newPortfolio.getOption().getBuyCollateral() * (newPortfolio.getVolume() - Math.abs(oldPortfolio.getVolume())));
-                finalOperationsForReverseBuyPortfolioIfItIsContained(newPortfolio, oldPortfolio);
+                beanFactory.getBean(PortfoliosService.class)
+                        .finalOperationsForReverseBuyPortfolioIfItIsContained(newPortfolio, oldPortfolio);
                 log.info("New portfolio {} will be buy", newPortfolio);
                 log.info("Old portfolio {} will be delete", oldPortfolio);
 
-                try {
-                    producerService.createEvent(new TradeCreatedEventDto(oldPortfolio, newPortfolio));
-                }
-                catch (InterruptedException | ExecutionException exception) {
-                    throw new RuntimeException(exception);
-                }
-
+                producerService.createEvent(new TradeCreatedEventDto(oldPortfolio, newPortfolio));
             }
             else {
                 log.info("Insufficient funds to complete the trade");
@@ -376,7 +359,8 @@ public class PortfoliosService implements IPortfolioFacade {
             newPortfolio.getOwner().setOpenLimit(newPortfolio.getOwner().getOpenLimit()
                     - newPortfolio.getOption().getWriteCollateral() * Math.abs(newPortfolio.getVolume()));
             newPortfolio.setVolume((Math.abs(newPortfolio.getVolume()) + Math.abs(oldPortfolio.getVolume())) * -1);
-            finalOperationsForDirectOrReverseWritePortfolioIfItIsContained(newPortfolio, oldPortfolio);
+            beanFactory.getBean(PortfoliosService.class)
+                    .finalOperationsForDirectOrReverseWritePortfolioIfItIsContained(newPortfolio, oldPortfolio);
         }
         else {
             log.info("Insufficient funds to complete the trade");
@@ -393,12 +377,7 @@ public class PortfoliosService implements IPortfolioFacade {
         log.info("New portfolio {} will be write", newPortfolio);
         log.info("Old portfolio {} will be delete", oldPortfolio);
 
-        try {
-            producerService.createEvent(new TradeCreatedEventDto(oldPortfolio, newPortfolio));
-        }
-        catch (InterruptedException | ExecutionException exception) {
-            throw new RuntimeException(exception);
-        }
+        producerService.createEvent(new TradeCreatedEventDto(oldPortfolio, newPortfolio));
     }
 
     @Transactional
@@ -418,13 +397,7 @@ public class PortfoliosService implements IPortfolioFacade {
             oldPortfolio.setVolume(0);
             oldPortfolio.setTradePrice(positionSetter.countPriceInRur(oldPortfolio));
 
-            try {
-                producerService.createEvent(new TradeCreatedEventDto(null, oldPortfolio));
-            }
-            catch (InterruptedException | ExecutionException exception) {
-                throw new RuntimeException(exception);
-            }
-
+            producerService.createEvent(new TradeCreatedEventDto(null, oldPortfolio));
         }
         else if (Math.abs(newPortfolio.getVolume()) < oldPortfolio.getVolume()) {
             positionSetter.updateCurrentNetPositionAndOpenLimit();
@@ -445,13 +418,7 @@ public class PortfoliosService implements IPortfolioFacade {
             log.info("New portfolio {} will be write", newPortfolio);
             log.info("Old portfolio {} will be delete", oldPortfolio);
 
-            try {
-                producerService.createEvent(new TradeCreatedEventDto(oldPortfolio, newPortfolio));
-            }
-            catch (InterruptedException | ExecutionException exception) {
-                throw new RuntimeException(exception);
-            }
-
+            producerService.createEvent(new TradeCreatedEventDto(oldPortfolio, newPortfolio));
         }
         else if (Math.abs(newPortfolio.getVolume()) > oldPortfolio.getVolume()) {
             if (positionSetter.isThereEnoughMoneyForReverseWrite(oldPortfolio, newPortfolio)) {
@@ -469,7 +436,8 @@ public class PortfoliosService implements IPortfolioFacade {
                         + oldPortfolio.getOption().getBuyCollateral() * oldPortfolio.getVolume()
                         - newPortfolio.getOption().getWriteCollateral() * Math.abs(newPortfolio.getVolume()));
                 newPortfolio.setVolume(newPortfolio.getVolume() + oldPortfolio.getVolume());
-                finalOperationsForDirectOrReverseWritePortfolioIfItIsContained(newPortfolio, oldPortfolio);
+                beanFactory.getBean(PortfoliosService.class)
+                        .finalOperationsForDirectOrReverseWritePortfolioIfItIsContained(newPortfolio, oldPortfolio);
             }
             else {
                 log.info("Insufficient funds to complete the trade");
@@ -508,12 +476,7 @@ public class PortfoliosService implements IPortfolioFacade {
                     personsService.save(portfolio.getOwner());
                     log.info("Portfolio {} will be deleted", portfolio);
 
-                    try {
-                        producerService.createEvent(new TradeCreatedEventDto(portfolio, null));
-                    }
-                    catch (InterruptedException | ExecutionException exception) {
-                        throw new RuntimeException(exception);
-                    }
+                    producerService.createEvent(new TradeCreatedEventDto(portfolio, null));
                 }
             });
         }

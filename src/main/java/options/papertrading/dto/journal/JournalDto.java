@@ -1,9 +1,14 @@
 package options.papertrading.dto.journal;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class JournalDto {
     private LocalDateTime dateAndTime;
     private String optionName;

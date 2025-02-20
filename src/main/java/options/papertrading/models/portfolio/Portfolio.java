@@ -1,12 +1,16 @@
 package options.papertrading.models.portfolio;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import options.papertrading.models.option.Option;
 import options.papertrading.models.person.Person;
 
 @Entity
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Table(name = "portfolios")
 public class Portfolio {
 

@@ -1,8 +1,12 @@
 package options.papertrading.dto.portfolio;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class PortfolioDto {
     private String id;
     private int strike;

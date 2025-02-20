@@ -13,6 +13,7 @@ import options.papertrading.util.converters.TextConverter;
 import options.papertrading.util.exceptions.PersonNotCreatedException;
 import options.papertrading.util.mail.SmtpMailSender;
 import options.papertrading.util.mappers.PersonMapper;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,6 +38,7 @@ public class PersonsService implements IPersonFacade {
     private final SmtpMailSender smtpMailSender;
     private final PasswordEncoder passwordEncoder;
     private final TextConverter textConverter;
+    private final BeanFactory beanFactory;
 
     @Value("${pathToPasswordResetText}")
     private String pathToPasswordResetText;
@@ -108,14 +110,16 @@ public class PersonsService implements IPersonFacade {
 
     @Transactional(readOnly = true)
     public List<PersonDto> getPersons() {
-        return findAll().parallelStream()
-                        .map(this::convertToPersonDto)
-                        .collect(Collectors.toList());
+        return beanFactory.getBean(PersonsService.class)
+                .findAll().parallelStream()
+                .map(this::convertToPersonDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public Person updateActivationCode(@NonNull String email) {
-        Optional<Person> optional = findByEmail(email);
+        Optional<Person> optional = beanFactory.getBean(PersonsService.class)
+                .findByEmail(email);
         if (optional.isEmpty()) {
             throw new NullPointerException();
         }
@@ -127,12 +131,25 @@ public class PersonsService implements IPersonFacade {
         return person;
     }
 
-    public void sendMailForResetPassword(@NonNull Person person) throws IOException, MessagingException {
+    public void sendMailForResetPassword(@NonNull Person person) {
         log.info("Person: {}", person);
-        String message = String.format(textConverter.readMailTextFromFile(pathToPasswordResetText),
-                                       person.getUsername(),
-                                       person.getActivationCode());
-        sendMail(person.getEmail(), "Восстановление пароля", message);
+        String message = null;
+        try {
+            message = String.format(textConverter.readMailTextFromFile(pathToPasswordResetText),
+                                           person.getUsername(),
+                                           person.getActivationCode());
+        }
+        catch (IOException e) {
+            log.error("IOException: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+        try {
+            sendMail(person.getEmail(), "Восстановление пароля", message);
+        }
+        catch (MessagingException e) {
+            log.error("MessagingException: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     @Transactional(readOnly = true)

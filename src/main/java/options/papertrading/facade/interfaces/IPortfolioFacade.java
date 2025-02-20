@@ -9,4 +9,5 @@ public interface IPortfolioFacade {
     void addPortfolio(OptionDto optionDto);
     void addPortfolio(String id, int volume, int buyOrWrite);
     void reset();
+    void marginCallCheck();
 }

@@ -20,7 +20,7 @@ public class ProducerServiceImpl implements ProducerService {
 
     @Override
     @Transactional
-    public String createEvent(TradeCreatedEventDto tradeCreatedEventDto) throws ExecutionException, InterruptedException {
+    public String createEvent(TradeCreatedEventDto tradeCreatedEventDto) {
         String eventId = UUID.randomUUID().toString();
         TradeCreatedEvent tradeCreatedEvent = new TradeCreatedEvent(eventId,
                                                                     tradeCreatedEventDto.getPortfolioForDelete(),
@@ -31,7 +31,14 @@ public class ProducerServiceImpl implements ProducerService {
                                                                                 tradeCreatedEvent);
         record.headers().add("messageId", UUID.randomUUID().toString().getBytes());
 
-        SendResult<String, TradeCreatedEvent> result = kafkaTemplate.send(record).get();
+        SendResult<String, TradeCreatedEvent> result = null;
+        try {
+            result = kafkaTemplate.send(record).get();
+        }
+        catch (InterruptedException | ExecutionException e) {
+            log.error("Error sending message: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
 
         log.info("Topic: {}", result.getRecordMetadata().topic());
         log.info("Partition: {}", result.getRecordMetadata().partition());

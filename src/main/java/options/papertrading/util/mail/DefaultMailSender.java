@@ -1,0 +1,47 @@
+package options.papertrading.util.mail;
+
+import jakarta.mail.MessagingException;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import options.papertrading.models.person.Person;
+import options.papertrading.util.converters.TextConverter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import java.io.IOException;
+
+@RequiredArgsConstructor
+@Slf4j
+@Component
+public class DefaultMailSender {
+    private final SmtpMailSender smtpMailSender;
+    private final TextConverter textConverter;
+
+    @Value("${pathToPasswordResetText}")
+    private String pathToPasswordResetText;
+
+    public void sendMailForResetPassword(@NonNull Person person) {
+        log.info("Person: {}", person);
+        String message = null;
+        try {
+            message = String.format(textConverter.readMailTextFromFile(pathToPasswordResetText),
+                    person.getUsername(),
+                    person.getActivationCode());
+        } catch (IOException e) {
+            log.error("IOException: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        try {
+            sendMail(person.getEmail(), "Восстановление пароля", message);
+        } catch (MessagingException e) {
+            log.error("MessagingException: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendMail(String email, String subject, String message) throws MessagingException {
+        log.info("Sending '{}' message with '{}' subject to '{}' email", message, subject, email);
+        smtpMailSender.sendHtml(email, subject, message);
+    }
+}

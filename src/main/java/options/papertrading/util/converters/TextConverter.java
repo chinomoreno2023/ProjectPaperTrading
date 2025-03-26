@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 @Component
 @Slf4j
 public class TextConverter {
-
     public String readMailTextFromFile(String filePath) throws IOException {
         Path path = Paths.get(filePath);
         String mailText = new String(Files.readAllBytes(path));

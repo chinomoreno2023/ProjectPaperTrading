@@ -41,24 +41,20 @@ public class TradeCreatedEventHandlerImpl implements TradeCreatedEventHandler {
             if (tradeCreatedEvent.getPortfolioForSave() != null) {
                 portfoliosRepository.save(tradeCreatedEvent.getPortfolioForSave());
             }
-        }
-        catch (ResourceAccessException exception) {
+        } catch (ResourceAccessException exception) {
             log.error(exception.getMessage());
             throw new RetryableException(exception);
-        }
-        catch (HttpServerErrorException exception) {
+        } catch (HttpServerErrorException exception) {
             log.error(exception.getMessage());
             throw new NonRetryableException(exception);
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error(exception.getMessage());
             throw new NonRetryableException(exception);
         }
 
         try {
             processedEventRepository.save(new ProcessedEventEntity(messageId, tradeCreatedEvent.getEventId()));
-        }
-        catch (DataIntegrityViolationException exception) {
+        } catch (DataIntegrityViolationException exception) {
             log.error(exception.getMessage());
             throw new NonRetryableException(exception);
         }

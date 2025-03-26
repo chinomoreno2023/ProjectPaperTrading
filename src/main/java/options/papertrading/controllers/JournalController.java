@@ -1,6 +1,6 @@
 package options.papertrading.controllers;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.journal.JournalDto;
 import options.papertrading.facade.JournalFacade;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/portfolio/journal")
 public class JournalController {
     private final JournalFacade journalFacade;
@@ -32,8 +32,7 @@ public class JournalController {
         try {
             journalFacade.clearJournal();
             return ResponseEntity.ok("Вы очистили журнал");
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.info("Request to clear journal. Exception: {}", exception.getMessage());
             return ResponseEntity.internalServerError().body(exception.getMessage());
         }

@@ -1,17 +1,19 @@
 package options.papertrading.facade;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.dto.portfolio.PortfolioDto;
-import options.papertrading.facade.interfaces.IOptionFacade;
+import options.papertrading.facade.interfaces.IOptionFacadeHtmlVersion;
+import options.papertrading.util.validators.VolumeValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OptionFacade {
-    private final IOptionFacade optionFacade;
+    private final IOptionFacadeHtmlVersion optionFacade;
+    private final VolumeValidator volumeValidator;
 
     public List<OptionDto> showOptionsList() {
         return optionFacade.showOptionsList();
@@ -22,7 +24,7 @@ public class OptionFacade {
     }
 
     public void volumeValidate(OptionDto optionDto, BindingResult bindingResult) {
-        optionFacade.volumeValidate(optionDto, bindingResult);
+        volumeValidator.validate(optionDto, bindingResult);
     }
 
     public List<OptionDto> showOptionsFromCurrentPortfolios(List<PortfolioDto> portfolios) {

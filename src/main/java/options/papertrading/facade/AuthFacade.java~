@@ -1,0 +1,39 @@
+package options.papertrading.facade;
+
+import lombok.RequiredArgsConstructor;
+import options.papertrading.facade.interfaces.IAuthFacadeHtmlVersion;
+import options.papertrading.models.person.Person;
+import options.papertrading.models.TestYourIq;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+
+@RequiredArgsConstructor
+@Component
+public class AuthFacade {
+    private final IAuthFacadeHtmlVersion registrationService;
+
+    public void validate(Person person, Errors errors) {
+        registrationService.validate(person, errors);
+    }
+
+    public boolean validate(String password) {
+        return registrationService.validate(password);
+    }
+
+    public void register(Person person) {
+        registrationService.register(person);
+    }
+
+    public boolean activatePerson(String code) {
+        return registrationService.activatePerson(code);
+    }
+
+    public void testYourIqValidate(TestYourIq testYourIq, BindingResult bindingResult) {
+        registrationService.testYourIqValidate(testYourIq, bindingResult);
+    }
+
+    public TestYourIq testYourIq() {
+        return registrationService.testYourIq();
+    }
+}

@@ -1,4 +1,4 @@
-package options.papertrading.util.validators;
+package options.papertrading.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

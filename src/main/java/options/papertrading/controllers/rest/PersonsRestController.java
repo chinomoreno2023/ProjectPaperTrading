@@ -1,8 +1,8 @@
 package options.papertrading.controllers.rest;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.person.PersonDto;
 import options.papertrading.facade.interfaces.IPersonFacade;
@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/persons")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PersonsRestController {
     private final IPersonFacade jsonPersonFacade;
 
@@ -50,8 +50,7 @@ public class PersonsRestController {
         try {
             jsonPersonFacade.create(personDto);
             return ResponseEntity.ok("Пользователь добавлен в базу данных");
-        }
-        catch (HttpServerErrorException exception) {
+        } catch (HttpServerErrorException exception) {
             log.error("Server error adding new person: {}", exception.getMessage(), exception);
             return ResponseEntity.internalServerError().body("Ошибка сервера при добавлении нового пользователя");
         }

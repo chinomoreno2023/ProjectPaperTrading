@@ -1,16 +1,18 @@
 package options.papertrading.facade;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.dto.portfolio.PortfolioDto;
-import options.papertrading.facade.interfaces.IPortfolioFacade;
+import options.papertrading.facade.interfaces.IPortfolioFacadeHtmlVersion;
+import options.papertrading.services.processors.interfaces.IPortfolioManager;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Component
 public class PortfolioFacade {
-    private final IPortfolioFacade portfolioFacade;
+    private final IPortfolioFacadeHtmlVersion portfolioFacade;
+    private final IPortfolioManager portfolioManager;
 
     public List<PortfolioDto> showAllPortfolios() {
         return portfolioFacade.showAllPortfolios();
@@ -25,6 +27,6 @@ public class PortfolioFacade {
     }
 
     public void reset() {
-        portfolioFacade.reset();
+        portfolioManager.reset();
     }
 }

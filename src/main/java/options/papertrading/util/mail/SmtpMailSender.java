@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class SmtpMailSender {
-    private final JavaMailSender mailSender;
+    private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String username;
 
     @Autowired
     public SmtpMailSender(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
+        this.javaMailSender = mailSender;
     }
 
     public void sendHtml(@NonNull String emailTo,
@@ -28,12 +28,12 @@ public class SmtpMailSender {
                          @NonNull String message) throws MessagingException {
         log.info("Sending '{}' message with '{}' subject to '{}' email", message, subject, emailTo);
 
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         helper.setFrom(username);
         helper.setTo(emailTo);
         helper.setSubject(subject);
         helper.setText(message, true);
-        mailSender.send(mimeMessage);
+        javaMailSender.send(mimeMessage);
     }
 }

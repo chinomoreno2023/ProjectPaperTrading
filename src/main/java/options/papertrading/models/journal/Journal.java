@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import options.papertrading.models.person.Person;
-
 import java.time.LocalDateTime;
 
 @Entity

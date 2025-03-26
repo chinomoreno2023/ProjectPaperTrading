@@ -1,4 +1,4 @@
-package redis;
+package redis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -43,5 +43,4 @@ public class RedisConfig {
         }
         return new LettuceConnectionFactory(config);
     }
-
 }

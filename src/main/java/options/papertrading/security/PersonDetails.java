@@ -1,7 +1,7 @@
 package options.papertrading.security;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import options.papertrading.models.person.Person;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PersonDetails implements UserDetails {
     private final Person person;
 

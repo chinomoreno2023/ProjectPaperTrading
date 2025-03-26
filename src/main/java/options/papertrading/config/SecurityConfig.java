@@ -1,7 +1,6 @@
 package options.papertrading.config;
 
-import lombok.AllArgsConstructor;
-import options.papertrading.services.PersonDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,10 +16,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Profile("!maintenance")
 public class SecurityConfig {
-    private final PersonDetailsService personDetailsService;
+    private final UserDetailsService personDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {

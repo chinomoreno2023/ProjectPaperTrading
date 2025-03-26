@@ -1,7 +1,7 @@
 package options.papertrading.controllers.rest;
 
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.dto.portfolio.PortfolioDto;
@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/rest/portfolio")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PortfolioRestController {
     private final PortfolioFacade portfolioFacade;
     private final OptionFacade optionFacade;
@@ -54,8 +54,7 @@ public class PortfolioRestController {
         try {
             portfolioFacade.addPortfolio(optionDto);
             return ResponseEntity.ok("Опцион добавлен в портфель");
-        }
-        catch (HttpServerErrorException exception) {
+        } catch (HttpServerErrorException exception) {
             log.error("Server error adding option to portfolio: {}", exception.getMessage(), exception);
             return ResponseEntity.internalServerError().body("Ошибка сервера при добавлении опциона в портфель");
         }

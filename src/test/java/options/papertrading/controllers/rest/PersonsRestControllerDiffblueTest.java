@@ -2,7 +2,7 @@ package options.papertrading.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import options.papertrading.dto.person.PersonDto;
-import options.papertrading.facade.interfaces.IPersonFacade;
+import options.papertrading.facade.interfaces.IPersonFacadeHtmlVersion;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
@@ -20,9 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
-
 import java.util.ArrayList;
-
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +29,7 @@ import static org.mockito.Mockito.when;
 @Execution(ExecutionMode.SAME_THREAD)
 class PersonsRestControllerDiffblueTest {
     @MockBean
-    private IPersonFacade iPersonFacade;
+    private IPersonFacadeHtmlVersion iPersonFacade;
 
     @Autowired
     private PersonsRestController personsRestController;

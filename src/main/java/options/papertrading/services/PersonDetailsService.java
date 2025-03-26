@@ -1,7 +1,7 @@
 package options.papertrading.services;
 
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import options.papertrading.models.person.Person;
 import options.papertrading.repositories.PersonsRepository;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PersonDetailsService implements UserDetailsService {
     private final PersonsRepository personsRepository;
 

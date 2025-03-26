@@ -1,18 +1,20 @@
 package options.papertrading.facade;
 
 import jakarta.mail.MessagingException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import options.papertrading.dto.person.PersonDto;
-import options.papertrading.facade.interfaces.IPersonFacade;
+import options.papertrading.facade.interfaces.IPersonFacadeHtmlVersion;
 import options.papertrading.models.person.Person;
+import options.papertrading.util.mail.DefaultMailSender;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PersonFacade {
-    private final IPersonFacade personFacade;
+    private final IPersonFacadeHtmlVersion personFacade;
+    private final DefaultMailSender mailSender;
 
     public List<PersonDto> getPersons() {
         return personFacade.getPersons();
@@ -35,7 +37,7 @@ public class PersonFacade {
     }
 
     public void sendMail(String myMail, String subject, String message) throws MessagingException {
-        personFacade.sendMail(myMail, subject, message);
+        mailSender.sendMail(myMail, subject, message);
     }
 
     public Person updateActivationCode(String email) {
@@ -43,7 +45,7 @@ public class PersonFacade {
     }
 
     public void sendMailForResetPassword(Person person) throws MessagingException, IOException {
-        personFacade.sendMailForResetPassword(person);
+        mailSender.sendMailForResetPassword(person);
     }
 
     public void save(Person person) {

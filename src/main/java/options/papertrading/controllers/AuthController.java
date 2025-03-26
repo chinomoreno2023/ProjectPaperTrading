@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import options.papertrading.facade.AuthFacade;
 import options.papertrading.facade.PersonFacade;
 import options.papertrading.models.person.Person;
-import options.papertrading.util.validators.TestYourIq;
+import options.papertrading.models.TestYourIq;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -44,8 +44,7 @@ public class AuthController {
 
         try {
             authFacade.register(person);
-        }
-        catch (RuntimeException exception) {
+        } catch (RuntimeException exception) {
             model.addAttribute("emailError", "Произошла ошибка: " + exception.getMessage());
             return "auth/registration";
         }
@@ -90,11 +89,9 @@ public class AuthController {
             Person person = personFacade.updateActivationCode(email);
             personFacade.sendMailForResetPassword(person);
             return ResponseEntity.ok("Следуйте инструкциям в письме");
-        }
-        catch (NullPointerException exception){
+        } catch (NullPointerException exception){
             return ResponseEntity.badRequest().body("Пользователь с такой почтой не найден");
-        }
-        catch (MessagingException | IOException exception) {
+        } catch (MessagingException | IOException exception) {
             log.info("Exception: {}", exception);
             return ResponseEntity.badRequest().body("Пользователь с такой почтой найден, но не получилось отправить письмо");
         }
@@ -162,8 +159,7 @@ public class AuthController {
             String htmlMessage = message.replace("\n", "<br>") + mailboxOfUser;
             personFacade.sendMail(myMail, subject, htmlMessage);
             return ResponseEntity.ok("Отправлено");
-        }
-        catch (MessagingException exception) {
+        } catch (MessagingException exception) {
             log.info("Exception: {}", exception);
             return ResponseEntity.internalServerError().body("Не получилось отправить письмо");
         }

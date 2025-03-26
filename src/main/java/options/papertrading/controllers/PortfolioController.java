@@ -65,8 +65,7 @@ public class PortfolioController {
         try {
             portfolioFacade.addPortfolio(id, volume, buyOrWrite);
             return ResponseEntity.ok("Операция успешно выполнена");
-        }
-        catch (InsufficientFundsException | IllegalArgumentException e) {
+        } catch (InsufficientFundsException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -76,15 +75,9 @@ public class PortfolioController {
         try {
             portfolioFacade.reset();
             return ResponseEntity.ok("Данные портфеля были сброшены");
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.info("Request to reset. Exception: {}", exception.getMessage());
             return ResponseEntity.internalServerError().body(exception.getMessage());
         }
-    }
-
-    @GetMapping("/testPage")
-    public String openTestPage() {
-        return "testPage";
     }
 }

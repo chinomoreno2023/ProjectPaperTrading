@@ -1,60 +1,37 @@
 package options.papertrading.services;
 
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.journal.JournalDto;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.facade.interfaces.IJournalFacade;
-import options.papertrading.facade.interfaces.IPositionSetter;
+import options.papertrading.facade.interfaces.IPersonFacadeHtmlVersion;
+import options.papertrading.services.processors.interfaces.IPositionSetter;
 import options.papertrading.models.journal.Journal;
 import options.papertrading.models.person.Person;
 import options.papertrading.models.portfolio.Portfolio;
 import options.papertrading.repositories.JournalRepository;
-import options.papertrading.util.mappers.JournalMapper;
+import options.papertrading.util.converters.JournalConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class JournalService implements IJournalFacade {
-    private final JournalMapper journalMapper;
     private final JournalRepository journalRepository;
-    private final PersonsService personsService;
+    private final IPersonFacadeHtmlVersion personsService;
     private final IPositionSetter positionSetter;
+    private final JournalConverter journalConverter;
 
     @Transactional(readOnly = true)
     public List<JournalDto> showJournal() {
         Person owner = personsService.getCurrentPerson();
         List<Journal> journalList = journalRepository.findAllByOwner(owner);
-        return convertJournalListToJournalDtoList(journalList);
-    }
-
-    public JournalDto convertJournalToJournalDto(@NonNull Journal journal) {
-        JournalDto journalDto = journalMapper.convertToJournalDto(journal);
-        log.info("Converting {} to journalDto. Result: {}", journal, journalDto);
-        return journalDto;
-    }
-
-    public Journal convertJournalDtoToJournal(@NonNull JournalDto journalDto) {
-        Journal journal = journalMapper.convertToJournal(journalDto);
-        log.info("Converting {} to journal. Result: {}", journalDto, journal);
-        return journal;
-    }
-
-    public List<JournalDto> convertJournalListToJournalDtoList(@NonNull List<Journal> journalList) {
-        List<JournalDto> journalDtoList = journalList.parallelStream()
-                .sorted(Comparator.comparing(Journal::getDateAndTime).reversed())
-                .map(this::convertJournalToJournalDto)
-                .collect(Collectors.toList());
-        log.info("Converting journal list '{}' to journalDto list. Result: {} ", journalList, journalDtoList);
-        return journalDtoList;
+        return journalConverter.convertJournalListToJournalDtoList(journalList);
     }
 
     @Transactional

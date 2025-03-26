@@ -1,24 +1,26 @@
 package options.papertrading.facade;
 
-import lombok.AllArgsConstructor;
-import options.papertrading.facade.interfaces.IAuthFacade;
+import lombok.RequiredArgsConstructor;
+import options.papertrading.facade.interfaces.IAuthFacadeHtmlVersion;
+import options.papertrading.models.TestYourIq;
 import options.papertrading.models.person.Person;
-import options.papertrading.util.validators.TestYourIq;
+import options.papertrading.util.validators.PersonValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Component
 public class AuthFacade {
-    private final IAuthFacade registrationService;
+    private final IAuthFacadeHtmlVersion registrationService;
+    private final PersonValidator personValidator;
 
     public void validate(Person person, Errors errors) {
-        registrationService.validate(person, errors);
+        personValidator.validate(person, errors);
     }
 
     public boolean validate(String password) {
-        return registrationService.validate(password);
+        return personValidator.validate(password);
     }
 
     public void register(Person person) {
@@ -30,10 +32,10 @@ public class AuthFacade {
     }
 
     public void testYourIqValidate(TestYourIq testYourIq, BindingResult bindingResult) {
-        registrationService.testYourIqValidate(testYourIq, bindingResult);
+        personValidator.testYourIqValidate(testYourIq, bindingResult);
     }
 
     public TestYourIq testYourIq() {
-        return registrationService.testYourIq();
+        return personValidator.testYourIq();
     }
 }

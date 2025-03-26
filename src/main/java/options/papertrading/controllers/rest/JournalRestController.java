@@ -1,6 +1,6 @@
 package options.papertrading.controllers.rest;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.journal.JournalDto;
 import options.papertrading.facade.interfaces.IJournalFacade;
@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("rest/journal")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class JournalRestController {
     private final IJournalFacade jsonJournalFacade;
 

@@ -1,0 +1,353 @@
+package options.papertrading.util.converters;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import java.util.ArrayList;
+import java.util.List;
+import options.papertrading.dto.option.OptionDto;
+import options.papertrading.models.option.Option;
+import options.papertrading.repositories.PersonsRepository;
+import options.papertrading.repositories.PortfoliosRepository;
+import options.papertrading.services.PersonsService;
+import options.papertrading.services.PositionSetter;
+import options.papertrading.util.mail.SmtpMailSender;
+import options.papertrading.util.mappers.OptionMapper;
+import options.papertrading.util.mappers.PersonMapper;
+import org.hibernate.engine.spi.SessionDelegatorBaseImpl;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+class OptionConverterDiffblueTest {
+  /**
+   * Test {@link OptionConverter#convertToOptionDto(Option)}.
+   * <p>
+   * Method under test: {@link OptionConverter#convertToOptionDto(Option)}
+   */
+  @Test
+  @DisplayName("Test convertToOptionDto(Option)")
+  @Tag("MaintainedByDiffblue")
+  void testConvertToOptionDto() {
+    // Arrange
+    OptionMapper optionMapper = mock(OptionMapper.class);
+    OptionDto optionDto = new OptionDto("42", 1, "Type", 10.0d, 1, 10.0d, 1, 10.0d, 10.0d, 1, 10.0d);
+
+    when(optionMapper.convertToOptionDto(Mockito.<Option>any())).thenReturn(optionDto);
+    SessionDelegatorBaseImpl entityManager = new SessionDelegatorBaseImpl(mock(SessionImplementor.class));
+    PersonsRepository personsRepository = mock(PersonsRepository.class);
+    SmtpMailSender smtpMailSender = new SmtpMailSender(new JavaMailSenderImpl());
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    TextConverter textConverter = new TextConverter();
+    PersonsService personsService = new PersonsService(personsRepository, PersonMapper.INSTANCE, smtpMailSender,
+        passwordEncoder, textConverter, new DefaultListableBeanFactory());
+
+    PortfoliosRepository portfoliosRepository = mock(PortfoliosRepository.class);
+    OptionConverter optionConverter = new OptionConverter(
+        new PositionSetter(entityManager, personsService, portfoliosRepository, new DefaultListableBeanFactory()),
+        optionMapper);
+
+    Option option = new Option();
+    option.setBuyCollateral(10.0d);
+    option.setDaysToMaturity(1);
+    option.setId("42");
+    option.setPortfolio(new ArrayList<>());
+    option.setPrice(10.0d);
+    option.setStepPrice(10.0d);
+    option.setStrike(1);
+    option.setType("Type");
+    option.setVolatility(10.0d);
+    option.setWriteCollateral(10.0d);
+
+    // Act
+    OptionDto actualConvertToOptionDtoResult = optionConverter.convertToOptionDto(option);
+
+    // Assert
+    verify(optionMapper).convertToOptionDto(isA(Option.class));
+    assertSame(optionDto, actualConvertToOptionDtoResult);
+  }
+
+  /**
+   * Test {@link OptionConverter#convertListToOptionDtoList(List)}.
+   * <ul>
+   *   <li>Then return size is one.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link OptionConverter#convertListToOptionDtoList(List)}
+   */
+  @Test
+  @DisplayName("Test convertListToOptionDtoList(List); then return size is one")
+  @Tag("MaintainedByDiffblue")
+  void testConvertListToOptionDtoList_thenReturnSizeIsOne() {
+    // Arrange
+    OptionMapper optionMapper = mock(OptionMapper.class);
+    OptionDto optionDto = new OptionDto("42", 1, "Type", 10.0d, 1, 10.0d, 1, 10.0d, 10.0d, 1, 10.0d);
+
+    when(optionMapper.convertToOptionDto(Mockito.<Option>any())).thenReturn(optionDto);
+    SessionDelegatorBaseImpl entityManager = new SessionDelegatorBaseImpl(mock(SessionImplementor.class));
+    PersonsRepository personsRepository = mock(PersonsRepository.class);
+    SmtpMailSender smtpMailSender = new SmtpMailSender(new JavaMailSenderImpl());
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    TextConverter textConverter = new TextConverter();
+    PersonsService personsService = new PersonsService(personsRepository, PersonMapper.INSTANCE, smtpMailSender,
+        passwordEncoder, textConverter, new DefaultListableBeanFactory());
+
+    PortfoliosRepository portfoliosRepository = mock(PortfoliosRepository.class);
+    OptionConverter optionConverter = new OptionConverter(
+        new PositionSetter(entityManager, personsService, portfoliosRepository, new DefaultListableBeanFactory()),
+        optionMapper);
+
+    Option option = new Option();
+    option.setBuyCollateral(10.0d);
+    option.setDaysToMaturity(1);
+    option.setId("42");
+    option.setPortfolio(new ArrayList<>());
+    option.setPrice(10.0d);
+    option.setStepPrice(10.0d);
+    option.setStrike(1);
+    option.setType("Type");
+    option.setVolatility(10.0d);
+    option.setWriteCollateral(10.0d);
+
+    ArrayList<Option> options = new ArrayList<>();
+    options.add(option);
+
+    // Act
+    List<OptionDto> actualConvertListToOptionDtoListResult = optionConverter.convertListToOptionDtoList(options);
+
+    // Assert
+    verify(optionMapper).convertToOptionDto(isA(Option.class));
+    assertEquals(1, actualConvertListToOptionDtoListResult.size());
+    assertSame(optionDto, actualConvertListToOptionDtoListResult.get(0));
+  }
+
+  /**
+   * Test {@link OptionConverter#convertListToOptionDtoList(List)}.
+   * <ul>
+   *   <li>Then return size is three.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link OptionConverter#convertListToOptionDtoList(List)}
+   */
+  @Test
+  @DisplayName("Test convertListToOptionDtoList(List); then return size is three")
+  @Tag("MaintainedByDiffblue")
+  void testConvertListToOptionDtoList_thenReturnSizeIsThree() {
+    // Arrange
+    OptionMapper optionMapper = mock(OptionMapper.class);
+    OptionDto optionDto = new OptionDto("42", 1, "Type", 10.0d, 1, 10.0d, 1, 10.0d, 10.0d, 1, 10.0d);
+
+    when(optionMapper.convertToOptionDto(Mockito.<Option>any())).thenReturn(optionDto);
+    SessionDelegatorBaseImpl entityManager = new SessionDelegatorBaseImpl(mock(SessionImplementor.class));
+    PersonsRepository personsRepository = mock(PersonsRepository.class);
+    SmtpMailSender smtpMailSender = new SmtpMailSender(new JavaMailSenderImpl());
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    TextConverter textConverter = new TextConverter();
+    PersonsService personsService = new PersonsService(personsRepository, PersonMapper.INSTANCE, smtpMailSender,
+        passwordEncoder, textConverter, new DefaultListableBeanFactory());
+
+    PortfoliosRepository portfoliosRepository = mock(PortfoliosRepository.class);
+    OptionConverter optionConverter = new OptionConverter(
+        new PositionSetter(entityManager, personsService, portfoliosRepository, new DefaultListableBeanFactory()),
+        optionMapper);
+
+    Option option = new Option();
+    option.setBuyCollateral(10.0d);
+    option.setDaysToMaturity(1);
+    option.setId("42");
+    option.setPortfolio(new ArrayList<>());
+    option.setPrice(10.0d);
+    option.setStepPrice(10.0d);
+    option.setStrike(1);
+    option.setType("Type");
+    option.setVolatility(10.0d);
+    option.setWriteCollateral(10.0d);
+
+    Option option2 = new Option();
+    option2.setBuyCollateral(0.0d);
+    option2.setDaysToMaturity(2);
+    option2.setId("Option ticker: {}");
+    option2.setPortfolio(new ArrayList<>());
+    option2.setPrice(0.0d);
+    option2.setStepPrice(0.0d);
+    option2.setStrike(2);
+    option2.setType("Price in RUR: {}");
+    option2.setVolatility(0.0d);
+    option2.setWriteCollateral(0.0d);
+
+    Option option3 = new Option();
+    option3.setBuyCollateral(10.0d);
+    option3.setDaysToMaturity(1);
+    option3.setId("42");
+    option3.setPortfolio(new ArrayList<>());
+    option3.setPrice(10.0d);
+    option3.setStepPrice(10.0d);
+    option3.setStrike(1);
+    option3.setType("Option ticker: {}");
+    option3.setVolatility(10.0d);
+    option3.setWriteCollateral(10.0d);
+
+    ArrayList<Option> options = new ArrayList<>();
+    options.add(option3);
+    options.add(option2);
+    options.add(option);
+
+    // Act
+    List<OptionDto> actualConvertListToOptionDtoListResult = optionConverter.convertListToOptionDtoList(options);
+
+    // Assert
+    verify(optionMapper, atLeast(1)).convertToOptionDto(Mockito.<Option>any());
+    assertEquals(3, actualConvertListToOptionDtoListResult.size());
+    assertSame(optionDto, actualConvertListToOptionDtoListResult.get(1));
+    assertSame(optionDto, actualConvertListToOptionDtoListResult.get(2));
+  }
+
+  /**
+   * Test {@link OptionConverter#convertListToOptionDtoList(List)}.
+   * <ul>
+   *   <li>Then return size is two.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link OptionConverter#convertListToOptionDtoList(List)}
+   */
+  @Test
+  @DisplayName("Test convertListToOptionDtoList(List); then return size is two")
+  @Tag("MaintainedByDiffblue")
+  void testConvertListToOptionDtoList_thenReturnSizeIsTwo() {
+    // Arrange
+    OptionMapper optionMapper = mock(OptionMapper.class);
+    OptionDto optionDto = new OptionDto("42", 1, "Type", 10.0d, 1, 10.0d, 1, 10.0d, 10.0d, 1, 10.0d);
+
+    when(optionMapper.convertToOptionDto(Mockito.<Option>any())).thenReturn(optionDto);
+    SessionDelegatorBaseImpl entityManager = new SessionDelegatorBaseImpl(mock(SessionImplementor.class));
+    PersonsRepository personsRepository = mock(PersonsRepository.class);
+    SmtpMailSender smtpMailSender = new SmtpMailSender(new JavaMailSenderImpl());
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    TextConverter textConverter = new TextConverter();
+    PersonsService personsService = new PersonsService(personsRepository, PersonMapper.INSTANCE, smtpMailSender,
+        passwordEncoder, textConverter, new DefaultListableBeanFactory());
+
+    PortfoliosRepository portfoliosRepository = mock(PortfoliosRepository.class);
+    OptionConverter optionConverter = new OptionConverter(
+        new PositionSetter(entityManager, personsService, portfoliosRepository, new DefaultListableBeanFactory()),
+        optionMapper);
+
+    Option option = new Option();
+    option.setBuyCollateral(10.0d);
+    option.setDaysToMaturity(1);
+    option.setId("42");
+    option.setPortfolio(new ArrayList<>());
+    option.setPrice(10.0d);
+    option.setStepPrice(10.0d);
+    option.setStrike(1);
+    option.setType("Type");
+    option.setVolatility(10.0d);
+    option.setWriteCollateral(10.0d);
+
+    Option option2 = new Option();
+    option2.setBuyCollateral(0.0d);
+    option2.setDaysToMaturity(2);
+    option2.setId("Option ticker: {}");
+    option2.setPortfolio(new ArrayList<>());
+    option2.setPrice(0.0d);
+    option2.setStepPrice(0.0d);
+    option2.setStrike(2);
+    option2.setType("Price in RUR: {}");
+    option2.setVolatility(0.0d);
+    option2.setWriteCollateral(0.0d);
+
+    ArrayList<Option> options = new ArrayList<>();
+    options.add(option2);
+    options.add(option);
+
+    // Act
+    List<OptionDto> actualConvertListToOptionDtoListResult = optionConverter.convertListToOptionDtoList(options);
+
+    // Assert
+    verify(optionMapper, atLeast(1)).convertToOptionDto(Mockito.<Option>any());
+    assertEquals(2, actualConvertListToOptionDtoListResult.size());
+    assertSame(optionDto, actualConvertListToOptionDtoListResult.get(0));
+    assertSame(optionDto, actualConvertListToOptionDtoListResult.get(1));
+  }
+
+  /**
+   * Test {@link OptionConverter#convertListToOptionDtoList(List)}.
+   * <ul>
+   *   <li>When {@link ArrayList#ArrayList()}.</li>
+   *   <li>Then return Empty.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link OptionConverter#convertListToOptionDtoList(List)}
+   */
+  @Test
+  @DisplayName("Test convertListToOptionDtoList(List); when ArrayList(); then return Empty")
+  @Tag("MaintainedByDiffblue")
+  void testConvertListToOptionDtoList_whenArrayList_thenReturnEmpty() {
+    // Arrange
+    SessionDelegatorBaseImpl entityManager = new SessionDelegatorBaseImpl(mock(SessionImplementor.class));
+    PersonsRepository personsRepository = mock(PersonsRepository.class);
+    SmtpMailSender smtpMailSender = new SmtpMailSender(new JavaMailSenderImpl());
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    TextConverter textConverter = new TextConverter();
+    PersonsService personsService = new PersonsService(personsRepository, PersonMapper.INSTANCE, smtpMailSender,
+        passwordEncoder, textConverter, new DefaultListableBeanFactory());
+
+    PortfoliosRepository portfoliosRepository = mock(PortfoliosRepository.class);
+    OptionConverter optionConverter = new OptionConverter(
+        new PositionSetter(entityManager, personsService, portfoliosRepository, new DefaultListableBeanFactory()),
+        mock(OptionMapper.class));
+
+    // Act and Assert
+    assertTrue(optionConverter.convertListToOptionDtoList(new ArrayList<>()).isEmpty());
+  }
+
+  /**
+   * Test {@link OptionConverter#createOptionDtoFromView(String, int, int)}.
+   * <p>
+   * Method under test: {@link OptionConverter#createOptionDtoFromView(String, int, int)}
+   */
+  @Test
+  @DisplayName("Test createOptionDtoFromView(String, int, int)")
+  @Tag("MaintainedByDiffblue")
+  void testCreateOptionDtoFromView() {
+    // Arrange
+    SessionDelegatorBaseImpl entityManager = new SessionDelegatorBaseImpl(mock(SessionImplementor.class));
+    PersonsRepository personsRepository = mock(PersonsRepository.class);
+    SmtpMailSender smtpMailSender = new SmtpMailSender(new JavaMailSenderImpl());
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    TextConverter textConverter = new TextConverter();
+    PersonsService personsService = new PersonsService(personsRepository, PersonMapper.INSTANCE, smtpMailSender,
+        passwordEncoder, textConverter, new DefaultListableBeanFactory());
+
+    PortfoliosRepository portfoliosRepository = mock(PortfoliosRepository.class);
+
+    // Act
+    OptionDto actualCreateOptionDtoFromViewResult = (new OptionConverter(
+        new PositionSetter(entityManager, personsService, portfoliosRepository, new DefaultListableBeanFactory()),
+        mock(OptionMapper.class))).createOptionDtoFromView("42", 1, 1);
+
+    // Assert
+    assertEquals("42", actualCreateOptionDtoFromViewResult.getId());
+    assertNull(actualCreateOptionDtoFromViewResult.getType());
+    assertEquals(0, actualCreateOptionDtoFromViewResult.getDaysToMaturity());
+    assertEquals(0, actualCreateOptionDtoFromViewResult.getStrike());
+    assertEquals(0.0d, actualCreateOptionDtoFromViewResult.getBuyCollateral());
+    assertEquals(0.0d, actualCreateOptionDtoFromViewResult.getPrice());
+    assertEquals(0.0d, actualCreateOptionDtoFromViewResult.getStepPrice());
+    assertEquals(0.0d, actualCreateOptionDtoFromViewResult.getVolatility());
+    assertEquals(0.0d, actualCreateOptionDtoFromViewResult.getWriteCollateral());
+    assertEquals(1, actualCreateOptionDtoFromViewResult.getBuyOrWrite());
+    assertEquals(1, actualCreateOptionDtoFromViewResult.getVolume());
+  }
+}

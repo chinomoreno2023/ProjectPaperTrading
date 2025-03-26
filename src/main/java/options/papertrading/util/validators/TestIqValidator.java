@@ -1,5 +1,6 @@
 package options.papertrading.util.validators;
 
+import options.papertrading.models.TestYourIq;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

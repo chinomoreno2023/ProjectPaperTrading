@@ -81,7 +81,7 @@ public class AuthController {
         return "auth/registration";
     }
 
-    @PostMapping("/restore")
+    @PostMapping(value = "/restore", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> checkMailForRestorePassword(@RequestParam("emailForRestore")
                                                               @NonNull String email) {
         log.info("email for restore: {}", email);
@@ -107,7 +107,7 @@ public class AuthController {
         return "auth/restorePassword";
     }
 
-    @PostMapping("/restore/confirmation")
+    @PostMapping(value = "/restore/confirmation", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> restorePassword(@RequestParam("password") String password,
                                                   @RequestParam("retypedPassword") String retypedPassword,
                                                   @RequestParam("code") String code) {
@@ -133,7 +133,7 @@ public class AuthController {
         return "auth/profile";
     }
 
-    @PostMapping("/profile")
+    @PostMapping(value = "/profile", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> updatePassword(@RequestParam("password") String password,
                                                  @RequestParam("retypedPassword") String retypedPassword) {
         if (password.isEmpty() || retypedPassword.isEmpty())
@@ -147,7 +147,7 @@ public class AuthController {
         return ResponseEntity.badRequest().body("Пароли не совпадают");
     }
 
-    @PostMapping("/profile/feedback")
+    @PostMapping(value = "/profile/feedback", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> sendFeedback(@RequestParam("subject") String subject,
                                                @RequestParam("message") String message) {
         log.info("subject: {}, message: {}", subject, message);

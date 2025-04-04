@@ -80,7 +80,13 @@ public class PortfolioManager implements IPortfolioManager {
         List<Portfolio> portfolios = portfoliosRepository.findAll();
         if (!portfolios.isEmpty()) {
             portfolios.forEach(portfolio -> {
-                entityManager.refresh(portfolio.getOption());
+                if (portfolio.getOption() != null) {
+                    entityManager.refresh(portfolio.getOption());
+                } else {
+                    log.error("Option does not exist for portfolio {}", portfolio);
+                    portfoliosRepository.delete(portfolio);
+                    return;
+                }
                 OptionDto optionDto = portfolioConverter.convertPortfolioToOptionDto(portfolio);
 
                 if (portfolio.getOption().getDaysToMaturity() <= 0) {
@@ -119,8 +125,13 @@ public class PortfolioManager implements IPortfolioManager {
 
         if (!optionsInPortfolio.isEmpty()) {
             optionsInPortfolio.forEach(portfolio -> {
-
-                entityManager.refresh(portfolio.getOption());
+                if (portfolio.getOption() != null) {
+                    entityManager.refresh(portfolio.getOption());
+                } else {
+                    log.error("Option does not exist for portfolio {}", portfolio);
+                    portfoliosRepository.delete(portfolio);
+                    return;
+                }
                 if (portfolio.getVolume() > 0) {
                     owner.setCurrentNetPosition(owner.getCurrentNetPosition() + portfolio.getOption().getBuyCollateral()
                             * portfolio.getVolume());
@@ -148,7 +159,13 @@ public class PortfolioManager implements IPortfolioManager {
         List<Portfolio> optionsInPortfolio = portfoliosRepository.findAll();
         if (!optionsInPortfolio.isEmpty()) {
             optionsInPortfolio.forEach(portfolio -> {
-                entityManager.refresh(portfolio.getOption());
+                if (portfolio.getOption() != null) {
+                    entityManager.refresh(portfolio.getOption());
+                } else {
+                    log.error("Option does not exist for portfolio {}", portfolio);
+                    portfoliosRepository.delete(portfolio);
+                    return;
+                }
                 double savedVariatMargin = portfolio.getVariatMargin();
                 if (portfolio.getVolume() < 0) {
                     portfolio.setVariatMargin(savedVariatMargin
@@ -192,7 +209,13 @@ public class PortfolioManager implements IPortfolioManager {
                     .stream()
                     .filter(portfolio -> portfolio.getVolume() != 0)
                     .forEach(portfolio -> {
-                        entityManager.refresh(portfolio.getOption());
+                        if (portfolio.getOption() != null) {
+                            entityManager.refresh(portfolio.getOption());
+                        } else {
+                            log.error("Option does not exist for portfolio {}", portfolio);
+                            portfoliosRepository.delete(portfolio);
+                            return;
+                        }
                         double savedVariatMargin = portfolio.getVariatMargin();
                         if (portfolio.getVolume() < 0) {
                             portfolio.setVariatMargin(savedVariatMargin

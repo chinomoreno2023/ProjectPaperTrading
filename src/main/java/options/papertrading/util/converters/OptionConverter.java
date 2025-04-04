@@ -30,7 +30,7 @@ public class OptionConverter {
                 .collect(Collectors.toList());
     }
 
-    public OptionDto createOptionDtoFromView(String id, int volume, int buyOrWrite) {
+    public OptionDto createOptionDtoFromView(@NonNull String id, int volume, int buyOrWrite) {
         OptionDto optionDto = new OptionDto();
         optionDto.setId(id);
         optionDto.setVolume(volume);

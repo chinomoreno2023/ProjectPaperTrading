@@ -53,10 +53,10 @@ public class PortfolioRestController {
 
         try {
             portfolioFacade.addPortfolio(optionDto);
-            return ResponseEntity.ok("Опцион добавлен в портфель");
+            return ResponseEntity.ok("Option added to portfolio");
         } catch (HttpServerErrorException exception) {
             log.error("Server error adding option to portfolio: {}", exception.getMessage(), exception);
-            return ResponseEntity.internalServerError().body("Ошибка сервера при добавлении опциона в портфель");
+            return ResponseEntity.internalServerError().body("Server error adding option to portfolio");
         }
     }
 }

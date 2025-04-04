@@ -1,0 +1,10 @@
+package options.papertrading.models;
+
+public enum AdditionStrategyType {
+    BUYING_IF_NOT_CONTAINED,
+    WRITING_IF_NOT_CONTAINED,
+    DIRECT_BUYING_IF_CONTAINED,
+    REVERSE_BUYING_IF_CONTAINED,
+    DIRECT_WRITING_IF_CONTAINED,
+    REVERSE_WRITING_IF_CONTAINED
+}

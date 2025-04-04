@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.facade.interfaces.IJournalFacade;
 import options.papertrading.facade.interfaces.IPersonFacadeHtmlVersion;
+import options.papertrading.models.AdditionStrategyType;
 import options.papertrading.models.portfolio.Portfolio;
 import options.papertrading.repositories.OptionsRepository;
 import options.papertrading.repositories.PortfoliosRepository;
@@ -62,5 +63,10 @@ public class DirectBuyingPortfolioIfItIsContained implements AdditionStrategy {
             log.info("Insufficient funds to complete the trade");
             throw new InsufficientFundsException();
         }
+    }
+
+    @Override
+    public AdditionStrategyType getType() {
+        return AdditionStrategyType.DIRECT_BUYING_IF_CONTAINED;
     }
 }

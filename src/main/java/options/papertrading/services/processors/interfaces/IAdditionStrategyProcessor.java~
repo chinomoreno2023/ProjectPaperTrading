@@ -1,8 +1,0 @@
-package options.papertrading.services.processors.interfaces;
-
-import lombok.NonNull;
-import options.papertrading.dto.option.OptionDto;
-
-public interface IAdditionStrategyProcessor {
-    void process(@NonNull String strategy, @NonNull OptionDto optionDto);
-}

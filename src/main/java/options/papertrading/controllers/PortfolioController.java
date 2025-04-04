@@ -52,7 +52,7 @@ public class PortfolioController {
         return "options/options";
     }
 
-    @PostMapping("/confirmation")
+    @PostMapping(value = "/confirmation", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> addPortfolio(@RequestParam("id") String id,
                                                @RequestParam("volume") int volume,
                                                @RequestParam("buyOrWrite") int buyOrWrite) {
@@ -70,7 +70,7 @@ public class PortfolioController {
         }
     }
 
-    @PostMapping("/reset")
+    @PostMapping(value = "/reset", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> reset() {
         try {
             portfolioFacade.reset();

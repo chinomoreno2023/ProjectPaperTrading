@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.facade.interfaces.IJournalFacade;
 import options.papertrading.facade.interfaces.IPersonFacadeHtmlVersion;
+import options.papertrading.models.AdditionStrategyType;
 import options.papertrading.models.portfolio.Portfolio;
 import options.papertrading.repositories.OptionsRepository;
 import options.papertrading.repositories.PortfoliosRepository;
@@ -98,5 +99,10 @@ public class ReverseWritingPortfolioIfItIsContained implements AdditionStrategy 
                 throw new InsufficientFundsException();
             }
         }
+    }
+
+    @Override
+    public AdditionStrategyType getType() {
+        return AdditionStrategyType.REVERSE_WRITING_IF_CONTAINED;
     }
 }

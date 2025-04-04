@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.facade.interfaces.IJournalFacade;
 import options.papertrading.facade.interfaces.IPersonFacadeHtmlVersion;
+import options.papertrading.models.AdditionStrategyType;
 import options.papertrading.models.portfolio.Portfolio;
 import options.papertrading.repositories.OptionsRepository;
 import options.papertrading.repositories.PortfoliosRepository;
@@ -104,5 +105,10 @@ public class ReverseBuyingPortfolioIfItIsContained implements AdditionStrategy {
         newPortfolio.setVolume(newPortfolio.getVolume() - Math.abs(oldPortfolio.getVolume()));
         newPortfolio.setTradePrice(positionSetter.countPriceInRur(newPortfolio));
         newPortfolio.setVolatilityWhenWasTrade(newPortfolio.getOption().getVolatility());
+    }
+
+    @Override
+    public AdditionStrategyType getType() {
+        return AdditionStrategyType.REVERSE_BUYING_IF_CONTAINED;
     }
 }

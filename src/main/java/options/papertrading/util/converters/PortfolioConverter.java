@@ -49,7 +49,7 @@ public class PortfolioConverter {
         return portfolio;
     }
 
-    public OptionDto convertPortfolioToOptionDto(Portfolio portfolio) {
+    public OptionDto convertPortfolioToOptionDto(@NonNull Portfolio portfolio) {
         OptionDto optionDto = new OptionDto();
         optionDto.setId(portfolio.getOption().getId());
         optionDto.setStrike(portfolio.getOption().getStrike());

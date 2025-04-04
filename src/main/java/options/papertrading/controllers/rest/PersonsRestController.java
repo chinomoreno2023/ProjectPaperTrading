@@ -49,10 +49,10 @@ public class PersonsRestController {
 
         try {
             jsonPersonFacade.create(personDto);
-            return ResponseEntity.ok("Пользователь добавлен в базу данных");
+            return ResponseEntity.ok("The user has been added to the database");
         } catch (HttpServerErrorException exception) {
             log.error("Server error adding new person: {}", exception.getMessage(), exception);
-            return ResponseEntity.internalServerError().body("Ошибка сервера при добавлении нового пользователя");
+            return ResponseEntity.internalServerError().body("Server error adding new user");
         }
     }
 

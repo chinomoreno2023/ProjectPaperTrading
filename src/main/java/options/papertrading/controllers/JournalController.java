@@ -27,7 +27,7 @@ public class JournalController {
         return "journal/journal";
     }
 
-    @PostMapping("/clear")
+    @PostMapping(value = "/clear", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> clearJournal() {
         try {
             journalFacade.clearJournal();

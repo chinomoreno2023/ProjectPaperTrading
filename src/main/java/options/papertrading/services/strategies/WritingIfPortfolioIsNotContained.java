@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import options.papertrading.dto.option.OptionDto;
 import options.papertrading.facade.interfaces.IJournalFacade;
+import options.papertrading.models.AdditionStrategyType;
 import options.papertrading.models.portfolio.Portfolio;
 import options.papertrading.services.processors.interfaces.IPositionSetter;
 import options.papertrading.util.converters.PortfolioConverter;
@@ -45,5 +46,10 @@ public class WritingIfPortfolioIsNotContained implements AdditionStrategy {
             log.info("Insufficient funds to complete the trade");
             throw new InsufficientFundsException();
         }
+    }
+
+    @Override
+    public AdditionStrategyType getType() {
+        return AdditionStrategyType.WRITING_IF_NOT_CONTAINED;
     }
 }

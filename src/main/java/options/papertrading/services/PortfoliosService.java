@@ -8,6 +8,7 @@ import options.papertrading.dto.portfolio.PortfolioDto;
 import options.papertrading.facade.interfaces.IPersonFacadeHtmlVersion;
 import options.papertrading.facade.interfaces.IPortfolioFacade;
 import options.papertrading.facade.interfaces.IPortfolioFacadeHtmlVersion;
+import options.papertrading.models.AdditionStrategyType;
 import options.papertrading.models.option.Option;
 import options.papertrading.models.person.Person;
 import options.papertrading.models.portfolio.Portfolio;
@@ -38,6 +39,8 @@ public class PortfoliosService implements IPortfolioFacadeHtmlVersion {
     private final IMarginCallService marginCallService;
     private final IPortfolioManager portfolioManager;
     private final IAdditionStrategyProcessor strategy;
+    private static final int BUY = 1;
+    private static final int WRITE = -1;
 
     @Transactional(readOnly = true)
     public Portfolio findByOwnerAndOption(@NonNull Person owner, @NonNull Option option) {
@@ -59,7 +62,7 @@ public class PortfoliosService implements IPortfolioFacadeHtmlVersion {
     }
 
     @Transactional
-    public void addPortfolio(String id, int volume, int buyOrWrite) {
+    public void addPortfolio(@NonNull String id, int volume, int buyOrWrite) {
         beanFactory.getBean(IPortfolioFacade.class)
                 .addPortfolio(optionConverter.createOptionDtoFromView(id, volume, buyOrWrite));
     }
@@ -79,11 +82,11 @@ public class PortfoliosService implements IPortfolioFacadeHtmlVersion {
     @Transactional
     public void addPortfolioIfItIsNotContained(@NonNull OptionDto optionDto) {
         switch (optionDto.getBuyOrWrite()) {
-            case 1:
-                strategy.process("buyingIfPortfolioIsNotContained", optionDto);
+            case BUY:
+                strategy.process(AdditionStrategyType.BUYING_IF_NOT_CONTAINED, optionDto);
                 break;
-            case -1:
-                strategy.process("writingIfPortfolioIsNotContained", optionDto);
+            case WRITE:
+                strategy.process(AdditionStrategyType.WRITING_IF_NOT_CONTAINED, optionDto);
                 break;
             default:
                 log.error("Unknown buyOrWrite: {}", optionDto.getBuyOrWrite());
@@ -101,16 +104,16 @@ public class PortfoliosService implements IPortfolioFacadeHtmlVersion {
         log.info("New portfolio is {}", oldPortfolio);
 
         switch (optionDto.getBuyOrWrite()) {
-            case 1:
+            case BUY:
                 if (positionSetter.checkDirectOrReverse(optionDto, oldPortfolio)) {
-                    strategy.process("directBuyingPortfolioIfItIsContained", optionDto);
-                } else strategy.process("reverseBuyingPortfolioIfItIsContained", optionDto);
+                    strategy.process(AdditionStrategyType.DIRECT_BUYING_IF_CONTAINED, optionDto);
+                } else strategy.process(AdditionStrategyType.REVERSE_BUYING_IF_CONTAINED, optionDto);
                 break;
 
-            case -1:
+            case WRITE:
                 if (positionSetter.checkDirectOrReverse(optionDto, oldPortfolio)) {
-                    strategy.process("directWritingPortfolioIfItIsContained", optionDto);
-                } else strategy.process("reverseWritingPortfolioIfItIsContained", optionDto);
+                    strategy.process(AdditionStrategyType.DIRECT_WRITING_IF_CONTAINED, optionDto);
+                } else strategy.process(AdditionStrategyType.REVERSE_WRITING_IF_CONTAINED, optionDto);
                 break;
 
                 default:

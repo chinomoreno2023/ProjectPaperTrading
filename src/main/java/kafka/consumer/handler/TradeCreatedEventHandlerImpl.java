@@ -32,8 +32,13 @@ public class TradeCreatedEventHandlerImpl implements TradeCreatedEventHandler {
     public void handle(@Payload TradeCreatedEvent tradeCreatedEvent,
                        @Header("messageId") String messageId,
                        @Header(KafkaHeaders.RECEIVED_KEY) String messageKey) {
-
         log.info("Received event: {}", tradeCreatedEvent.getEventId());
+        ProcessedEventEntity processedEventEntity = processedEventRepository.findByMessageId(messageId);
+        if (processedEventEntity != null) {
+            log.info("Duplicate message id: {}", messageId);
+            return;
+        }
+
         try {
             if (tradeCreatedEvent.getPortfolioForDelete() != null) {
                 portfoliosRepository.delete(tradeCreatedEvent.getPortfolioForDelete());

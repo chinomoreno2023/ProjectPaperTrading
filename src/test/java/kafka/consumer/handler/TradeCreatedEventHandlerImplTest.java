@@ -162,4 +162,20 @@ class TradeCreatedEventHandlerImplTest {
             throw new RuntimeException("Method not found", e);
         }
     }
+
+    @Test
+    void handle_ShouldNotProcess_WhenMessageAlreadyProcessed() {
+        TradeCreatedEvent event = new TradeCreatedEvent();
+
+        when(processedEventRepository.findByMessageId("messageId"))
+                .thenReturn(new ProcessedEventEntity());
+
+        handler.handle(event, "messageId", "key");
+
+        assertAll(
+                () -> verify(portfoliosRepository, never()).delete(any()),
+                () -> verify(portfoliosRepository, never()).save(any()),
+                () -> verify(processedEventRepository, never()).save(any())
+        );
+    }
 }
